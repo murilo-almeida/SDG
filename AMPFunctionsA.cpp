@@ -2,7 +2,7 @@
 
 // ****************************************************************************
 //
-//  Modified Principal Functions of the first type(Section 3.2.3 Karnadiakis)
+//  Modified Principal Functions of the first type (Section 3.2.3 Karnadiakis)
 //
 // ****************************************************************************
 double Psia(int I, int i, double z)

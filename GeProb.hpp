@@ -15,7 +15,7 @@
 // ****************************************************************************
 // Classe GeProb (Generic Problem)
 // Encapsula os dados para montar e resolver o problema algebrico generico
-// Versao com template gerada em 23/10/2016
+// Versao com template gerada em 28/10/2016
 // ****************************************************************************
 
 // Flag to tell the evaluate routine what objects to fill

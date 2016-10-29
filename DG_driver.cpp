@@ -1,6 +1,6 @@
 # include "spectral.h"
 #include "DG_Prob.h"
-//extern  double p_in, p_out, sn_in, sn_ini, pw_ini;
+
 // ****************************************************************************
 // ****************************************************************************
 void DG_Prob::Driver(char * str)
@@ -9,15 +9,16 @@ void DG_Prob::Driver(char * str)
 
   // ****************************************************
   // Teste de numeracao de mesh com elementos continous
-  /*
+/*
    int count = 0;
    gbnmap_continuous(count);
-   if(myido==0) p->DG_eco();
+   if(myid==0) DG_eco();
    FILE * fsaida;
    fsaida=fopen("saida_proj_C0","wb");
    projetar_C0(fsaida,funcao,0);
    fclose(fsaida);
-   */
+   exit(0);
+*/
   // fim do teste
   // ****************************************************
 
@@ -46,7 +47,7 @@ void DG_Prob::Driver(char * str)
   // Cerne do problema  *
   // ********************
   // Especifica o algoritmo de resolucao de sistema linear
-  TrilinosSolver="Amesos";
+  TrilinosSolver="Amesos"; // ou "AztecOO"
 
   //"Amesos_Mumps; // nao existe
   //"Amesos_Superludist";  // nao funciona

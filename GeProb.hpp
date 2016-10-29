@@ -49,10 +49,6 @@ class GeProb
   void Condicoes_contorno(int *, std::vector < std::vector<int> >);
   void Processar_elementos();
 
-  //void set_Vertice_array(Vertice * ptvert);
-
-  //void set_EDGE_array(EDGE *ptr);
-
   //void set_bflag(int * ptr);
  // void set_novoNum(int * ptr);
 
@@ -211,27 +207,27 @@ GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
 };
 // ****************************************************************************
 // ****************************************************************************
-//void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::set_Vertice_array(Vertice * ptvert)
+//template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_Vertice_array(Vertice * ptvert)
 //{
  // V=ptvert;
 //};
 /*****************************************************************************/
 /*****************************************************************************/
 
-//void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::set_PhElem_array(PhElem * ptr)
+//template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_PhElem_array(PhElem * ptr)
 //{
 //  el=ptr;
 //};
 
 /*****************************************************************************/
 /*****************************************************************************/
-// void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::set_EDGE_array(EDGE *ptr)
+// template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_EDGE_array(EDGE *ptr)
 // {
 //   border=ptr;
 // };
 ///***************************************************************************/
 ///***************************************************************************/
-//void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::set_bflag(int * ptr)
+//template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_bflag(int * ptr)
 //{
 //  // bflag=ptr;
 //};
@@ -248,18 +244,6 @@ GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
 // *****************************************************************************
 // *****************************************************************************
 
-
-//  void  template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::delete_orders()
-//  {
-//  cout << "template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::delete_orders: ";
-//  cout << "Libera memoria dinamica\n";
-//  delete ptrLinear0; ptrLinear0=nullptr;
-//  delete ptrLinear1; ptrLinear1=nullptr;
-//  delete ptrTriang0; ptrTriang0=nullptr;
-//  delete ptrTriang1; ptrTriang1=nullptr;
-//  delete ptrQuadri0; ptrQuadri0=nullptr;
-//  delete ptrQuadri1; ptrQuadri1=nullptr;
-//  };
 /*****************************************************************************/
 /*****************************************************************************/
 template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_finput(FILE * ptr)
@@ -477,8 +461,6 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::RenumerarNos(int numf,int & ND)
 
 };
 
-// 26/11/2013 */
-
 // *****************************************************
 // Condicoes de contorno
 // *****************************************************
@@ -569,10 +551,10 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Condicoes_contorno(int *BC,std::vector< st
    printf("Processou DNBC= %d condicoes de contorno\n",DNBC);
 };
 
-// ***********************************************************************************
-// ***********************************************************************************
+// *****************************************************************************
+// *****************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
-// ***********************************************************************************
+// *****************************************************************************
 {
   if(NumPart > 1) {
 		int np;
@@ -702,47 +684,6 @@ template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N
   }
 };
 
-// **************************************************************
-// Encontra as variaveis pertencentes aos elementos da particao
-// que tem o indice igual ao id do processador (myid)
-// **************************************************************
-/*
-  void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::GetGlobalVarsDefs()
-  {
-  NumElemTypeents = Particao[myid].nele;
-  ElemTypeents = Particao[myid].ele;
-
-  std::vector<int> varlist;
-  std::vector<int> tempvec;
-  std::vector<int>::iterator it, it0;
-  int ntemp, ntemp0;
-
-  for (int i = 0; i < NumElemTypeents; i++) {
-  el[ElemTypeents[i]].anexa_gbnmap(0,varlist);
-  el[ElemTypeents[i]].anexa_gbnmap(1,varlist);
-  }
-  sort( varlist.begin(), varlist.end() );
-  it0=varlist.begin();
-  ntemp0=*it0;
-  tempvec.push_back (ntemp0);
-  for(it=it0+1;it!=varlist.end(); it++) {
-  ntemp = *it;
-  if( ntemp != ntemp0 ) {
-  tempvec.push_back (ntemp);
-  ntemp0=ntemp;
-    }
-  }
-  varlist.erase ( varlist.begin(), varlist.end() );
-  varlist.insert ( varlist.begin(), tempvec.begin(), tempvec.end() );
-  tempvec.erase ( tempvec.begin(), tempvec.end() );
-  NumMyGlobalVars = int(varlist.size());
-  MyGlobalVars.resize(NumMyGlobalVars);
-  for ( int i=0; i < NumMyGlobalVars; i++ ) {
-    MyGlobalVars[i] = varlist [i];
-  }
-  varlist.erase ( varlist.begin(), varlist.end() );
-};
-*/
 // *************************************************************************
 // *************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS>
@@ -1279,119 +1220,6 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_discontinuous(const int & ivar,int 
   for(int i=0;i<NELEM;++i)
     el[i].inicia_gbnmap(ivar,count);
 };
-
-// *****************************************************************************
-// Mapeamento global para funcoes continuas atraves das bordas
-// Especializado para N_VAR variaveis; Funciona para 2D
-// *****************************************************************************
-
-// ***************************************************************
-// template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous_2D   nao funciona para elemento 3D
-// Deprecated
-// Versao corrigida eh template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous
-// ***************************************************************
-/*
-  void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous_2D(int & count)
-  {
-  cout << "\n\ntemplate <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous_2D(int & count)\ndim " << dim << endl;
-  int lado,ivar,inc,nlado;
-  int aresta,sinal,e;
-
-  // aloca memoria de vec_map ( mapeamento dos vertices)
-  //int TEMP[N_VAR][NUMNP];
-  // Numera os modos nos vertices
-  count=0; // contador global dos modos
-  std::vector< std::vector<int> > vec_map;
-  for(int i=0;i<N_VAR;++i){
-  std::vector<int> TEMP;
-  for(int j=0;j<NUMNP;++j){
-  TEMP.push_back(count++);
-  }
-  vec_map.push_back(TEMP);
-  }
-
-  // for(int i=0;i<N_VAR;++i){
-  //   vec_map[i]= TEMP[i];
-  //}
-
-  for(e=0;e<NELEM;++e) el[e].gbnmap_vertices(vec_map);
-
-  // construir o mapeamento das bordas
-  for(int i=0;i<NBORDER;i++){
-  int t = border[i].tipo;
-  if(t==2) nlado=2; // border interior
-  else nlado=1;
-  for(lado=0;lado<nlado;++lado){
-  aresta=border[i].num_local[lado];
-  sinal=border[i].sinal[lado];
-  e=border[i].elemento[lado];
-  inc=0;
-  for(ivar=0;ivar<N_VAR;++ivar){
-  // printf("Borda %d lado %d elemento %d var %d sinal %d count %d modo inicial %d\n",i,lado,e,ivar,sinal,count,(count+inc));
-  //printf("antes de chamar el[e].gbnmap_aresta, inc = %d\n",inc);
-  el[e].gbnmap_aresta(aresta,sinal,ivar,count,inc);
-  }
-  }
-  count+=inc;
-  }
-
-  // construir mapeamento interior
-  for(int i=0;i<NELEM;++i){
-  for(ivar=0;ivar<N_VAR;++ivar){
-  el[i].gbnmap_interior(ivar,count);
-  }
-  }
-  };
-
-  // *****************************************************************************
-  // Mapeamento global para funcoes continuas atraves das bordas
-  // Especializado para a variavel ivar. Funciona para 2D
-  // *****************************************************************************
-
-  // ***************************************************************
-  // template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous_2D   nao funciona para elemento 3D
-  // Deprecated
-  // Versao corrigida eh template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous
-  // ***************************************************************
-  void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::gbnmap_continuous_2D(const int & ivar,int & count)
-  {
-  int i,lado,inc,nlado;
-  int aresta,sinal,e;
-
-  // aloca memoria de vec_map ( mapeamento dos vertices)
-  int vec_map[NUMNP];
-
-  // Numera os modos nos vertices
-  //count=0;
-  for(i=0;i<NUMNP;++i){
-  vec_map[i]=count++;
-  }
-
-  for(e=0;e<NELEM;++e) el[e].gbnmap_vertices(vec_map,ivar);
-
-  // construir o mapeamento das bordas
-  for(i=0;i<NL;i++){
-  int t = border[i].tipo;
-  if(t==2) nlado=2; // border interior
-  else nlado=1;
-  for(lado=0;lado<nlado;++lado){
-  aresta=border[i].num_local[lado];
-  sinal=border[i].sinal[lado];
-  e=border[i].elemento[lado];
-  inc=0;
-  printf("Borda %d lado %d elemento %d var %d sinal %d\n",i,lado,e,ivar,sinal);
-  el[e].gbnmap_aresta(aresta,sinal,ivar,count,inc);
-  }
-  count+=inc;
-  }
-
-  // construir mapeamento interior
-  for(i=0;i<NELEM;++i){
-  el[i].gbnmap_interior(ivar,count);
-  }
-  };
-*/
-// ************* Fim de Funcoes Deprecated *************************************
 
 // *******************************************************************
 // Funcao requer muita atencao na sua elaboracao

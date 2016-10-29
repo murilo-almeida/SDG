@@ -7,7 +7,6 @@
 
 enum var_nomes {sat,pres} ; // Esta ordem influencia na leitura dos parametros
 
-#include "DG_Prob.h"
 #include "PhElem.hpp"
 #include "GeProb.hpp"
 

@@ -45,6 +45,7 @@ HPP = 		GeProb.hpp \
 
 HEADERS =	DG_EI_Header.h\
 		DG_Prob.h\
+		DG_Elem.hpp \
 		DG_saidas_intermediarias.h\
 		Fluids.h\
 		Funcoes_c.h\
@@ -78,6 +79,7 @@ SOURCES =	AMPFunctionsA.cpp\
 		DG_Iterate.cpp\
 		DG_MVRA.cpp\
 		DG_Prob.cpp\
+		DG_Elem.cpp \
 		DG_RowMap.cpp\
 		DG_driver.cpp\
 		DG_eco.cpp\
@@ -113,6 +115,7 @@ OBJECTS =	AMPFunctionsA.o\
 		DG_Iterate.o\
 		DG_MVRA.o\
 		DG_Prob.o\
+		DG_Elem.o \
 		DG_RowMap.o\
 		DG_driver.o\
 		DG_eco.o\

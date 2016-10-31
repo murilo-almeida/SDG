@@ -1,8 +1,6 @@
 
 /*****************************************************************************/
 /*****************************************************************************/
-# include "spectral.h"
-
 #undef __FUNCT__
 #define __FUNCT__ "DG_run"
 /*****************************************************************************/
@@ -647,4 +645,62 @@ void DG_Prob::projetar_C0(FILE *file,double (*func)(double,double,double),
      // cout << "Terminou PhElem::projetar_C0 para elemento "<< i << endl<< endl;
     }
 
-}
+};
+// ******************************************************************************************
+
+// *****************************************************
+// Condicoes de contorno especializada de DG_Prob
+// *****************************************************
+// ****************************************************************************************
+//template <typename ElemType,int N_VAR,int N_FIELDS>
+void /*GeProb<ElemType,N_VAR,N_FIELDS>*/DG_Prob::Condicoes_contorno(int *BC,
+                                                                    std::vector< std::vector<int> > face_mask)
+// ****************************************************************************************
+{
+  cout << "Usando DG_Prob::Condicoes_contorno"<<std::endl;
+  // Inicializar o bflag com valores 0
+  for(int i=0;i<NG;i++) bflag.push_back(0); //bflag[i]=0;//bflag=0: conhecido
+  
+  int naux,tipo,n;
+  int elnum,eltype,facenum;//newfacenum;
+  
+  
+  // ***************************************************
+  // Cria os vetores com as bordas de entrada e saida *
+  // ***************************************************
+  for (int i=0;i<NBORDER;++i) {
+    /*   double epsilon =1.0e-6;// incluido em 22/04/2014
+     // ************
+     // Similar ao que é feito no fenics
+     if( abs(V[border[i].Na].x) < epsilon && abs(V[border[i].Nb].x) < epsilon ) {border[i].tipo= -1;} // incluido em 22/04/2014
+     else // incluido em 22/04/2014
+     if( abs(V[border[i].Na].x - 1.0) < epsilon && abs(V[border[i].Nb].x - 1.0) < epsilon ) {border[i].tipo= 1;}// incluido em 22/04/2014
+     // incluido em 22/04/2014
+     */
+    int t=border[i].tipo;
+    
+    if(t==-1) {
+      /*     elnum=border[i].elemento[0];// incluido em 22/04/2014
+       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
+       el[elnum].set_border_bc(border,newfacenum,-1);// incluido em 22/04/2014
+       */
+      in_borders.push_back(i);
+    }
+    if(t==1) {
+      /*   elnum=border[i].elemento[0];// incluido em 22/04/2014
+       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
+       el[elnum].set_border_bc(border,newfacenum,1);// incluido em 22/04/2014
+       */
+      out_borders.push_back(i);
+    }
+    /*
+     else if(t==0) { // incluido em 22/04/2014
+     elnum=border[i].elemento[0];// incluido em 22/04/2014
+     newfacenum=border[i].num_local[0];// incluido em 22/04/2014
+     el[elnum].set_border_bc(border,newfacenum,50);// incluido em 22/04/2014
+     } // incluido em 22/04/2014
+     */
+  }
+  printf("Processou DNBC= %d condicoes de contorno\n",DNBC);
+};
+

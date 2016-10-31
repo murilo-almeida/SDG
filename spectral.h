@@ -55,12 +55,12 @@ struct Field_struct {
 
 // tipo numero identico ao gmsh
 const int ElemType[6][3]={
-  {1,0,0}, // 0=ponto
-  {2,1,0}, // 1=linha
-  {3,3,1}, // 2=triangulo
-  {4,4,1}, // 3=quadrilatero
-  {4,6,4}, // 4=tetraedro
-  {8,12,6} // 5=hexaedro
+  {1,0,0}, //!< 0=ponto
+  {2,1,0}, //!< 1=linha
+  {3,3,1}, //!< 2=triangulo
+  {4,4,1}, //!< 3=quadrilatero
+  {4,6,4}, //!< 4=tetraedro
+  {8,12,6} //!< 5=hexaedro
 };
  /*! \var ElemType
   * Valores usados pelo gmsh.
@@ -181,7 +181,7 @@ struct EDGE  /*! EDGE = Borda do elemento */
  * \param Na    = number of the initial mode
  * \param Nb    = number of the final mode
  * \param elemento[2] = numbers of the elements sharing the border
- * \param aresta[2] = numbers of the sides the border assumes in the elements
+ * \param num_local[2] = side numbers the border assumes in the elements
  * \param sinal[2] = sign the border has in the elements; -1 if the border is
  followed backwards;
  * \param normal[2]= components of the normal vector;
@@ -249,5 +249,4 @@ struct FACE  /*! FACE = Borda do elemento tridimensional*/
 # include "Fluids.h"
 # include "Funcoes_c.h"
 # include "DG_Prob.h"
-
 #endif

@@ -9,9 +9,10 @@ enum var_nomes {sat,pres} ; // Esta ordem influencia na leitura dos parametros
 
 #include "PhElem.hpp"
 #include "GeProb.hpp"
+#include "DG_Elem.hpp"
 
 // Esta linha eh importante: MyElem eh usado em varios lugares
-typedef PhElem<2> MyElem;
+typedef DG_Elem  MyElem;
 
 // GeProb com elemento MyElemen=PhElem<2> = e duas variaveis
 // o segundo 2 abaixo equivale a dois espacos interpolantes
@@ -26,7 +27,7 @@ class DG_Prob : public GeProb<MyElem,2,2>
   void Driver(char * argv = 0);
 
   void DG_alocar_mem_local(const int qmax,const int nsat, const int npres);
-	void liberar_mem_local(const int nsat, const int npres);
+  void liberar_mem_local(const int nsat, const int npres);
   void DG_initial_conditions();
 
   // void DG_eco(std::vector< std::vector <int> > MapRow, int * ncount);
@@ -110,7 +111,8 @@ class DG_Prob : public GeProb<MyElem,2,2>
                 const Epetra_Vector* X,
                 Epetra_Vector* FVec,
                 Epetra_RowMatrix* Jacobian);
-
+  
+  void Condicoes_contorno(int *BC, std::vector< std::vector<int> > face_mask);
   // ***************************************************************************
 
  private:
@@ -142,6 +144,7 @@ class DG_Prob : public GeProb<MyElem,2,2>
   int passo;
   int tnc;
   int tncut;
+  //double p_in, p_out, sn_in, sn_ini, pw_ini;
 	double injrate_w,injrate_n;
   double prodrate_w,prodrate_n;
   double Iw,In,Qw,Qn;

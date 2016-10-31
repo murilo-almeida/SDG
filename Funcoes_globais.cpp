@@ -1,3 +1,4 @@
+
 # include "spectral.h"
 void quad_ordem(const int Av[4],const int Bi[4],int dir[3], int sgn[3], int & v2)
 {
@@ -193,17 +194,20 @@ double g(double x, double y,double z)
 // Testado em 19/07/2014
 // *************************************************************************************
 // Faz a mascara de faces de antiga para nova (face_mask) para o tetrahedro re-ordenado
+// face_mask[num da face original] = num nova face (no tetraedro ordenado padrao)
 // *************************************************************************************
 void tetrahedro_faz_face_mask(const int & n_in,int ver_temp[],std::vector<int> & face_mask)
 {
-  int seq_orig[4] = {0,1,2,3};
-  ordenar(4,ver_temp,seq_orig);
-  int facemap[4][3] = // sequencia das faces do tetraedro. Certifique-se que e igual ao de Tetrahedral.h
-  { {0,1,2},
-    {0,1,3},
-    {1,2,3},
-    {0,2,3}
+  int seq_orig[4] = {0,1,2,3}; // sequencia original eh 0,1,2,3
+  ordenar(4,ver_temp,seq_orig); // seq_orig retornada representa a nova ordem de acodo com vert_temp
+  int facemap[4][3] = // sequencia das faces do tetraedro. Certifique-se que e igual ao de Tetrahedral.
+  {          //  sequencia de faces adotada no Gambit. Copiada de Tetrahedral.h
+    {0,1,2}, // ABC
+    {0,1,3}, // ABD
+    {0,2,3}, // ACD
+    {1,2,3}  // BCD
   };
+  
   int temp[3],temp1[3] = {0,1,2};
   // face nova i em termos de seq_orig
   for(int i=0; i<4; ++i) { // nova face
@@ -461,7 +465,7 @@ int ResolverSistema(const int NumD, const int count,
   		    int * Ti, int * Tj, double * Tx, double * B, double * x)
 // *******************************************************************
 {
-	std::vector<int>     Ap  (NumD+1);
+  std::vector<int>     Ap  (NumD+1);
   std::vector<int>     Ai  (count);
   std::vector<double>  Ax  (count);
   std::vector<int>     Map (count);

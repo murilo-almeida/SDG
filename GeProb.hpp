@@ -119,11 +119,10 @@ protected:
   int NL = 0;
   int NF = 0;
   int NBORDER = 0;
-  std::vector<Vertice>  V;
+  Vertice * V;
   std::vector<ARESTA>   Aresta;
   std::vector<FACE>     Face;
-  //std::vector< PhElem > el; // passou para DG_Prob.h
-  std::vector< ElemType > el; // Aqui eh o ponto chave de usar o <typename ElemType>
+  ElemType * el; // Aqui eh o ponto chave de usar o <typename ElemType>
   //Elemento * Elem;
   int * novoNum;
 
@@ -162,8 +161,8 @@ protected:
   std::string TrilinosSolver; // tipo de solver usado
   std::string AmesosSolverType; // se usar amesos qual o tipo duas opcoes: Amesos_Umfpack e Amesos_Klu
 };
+// **************** End of class declaration *********************************
 
-// #endif
 /*****************************************************************************/
 /*****************************************************************************/
 template <typename ElemType,int N_VAR,int N_FIELDS>
@@ -174,9 +173,9 @@ template <typename ElemType,int N_VAR,int N_FIELDS>
 GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
 {cout<<"\nGeProb destructor\n";
 
-  //delete [] V; V=nullptr;
+  delete [] V; V=nullptr;
 
-  //delete [] el; el=nullptr;
+  delete [] el; el=nullptr;
 
   delete [] novoNum; novoNum = nullptr;
   // Terminou de estabelecer as condicoes de contorno
@@ -207,7 +206,8 @@ GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
 };
 // ****************************************************************************
 // ****************************************************************************
-//template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_Vertice_array(Vertice * ptvert)
+//template <typename ElemType,int N_VAR,int N_FIELDS>
+//void GeProb<ElemType,N_VAR,N_FIELDS>::set_Vertice_array(Vertice * ptvert)
 //{
  // V=ptvert;
 //};
@@ -227,14 +227,16 @@ GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
 // };
 ///***************************************************************************/
 ///***************************************************************************/
-//template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_bflag(int * ptr)
+//template <typename ElemType,int N_VAR,int N_FIELDS>
+//void GeProb<ElemType,N_VAR,N_FIELDS>::set_bflag(int * ptr)
 //{
 //  // bflag=ptr;
 //};
 ///***************************************************************************/
 ///***************************************************************************/
 
-//void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::set_novoNum(int * ptr)
+//template <typename ElemType,int N_VAR,int N_FIELDS>
+//void GeProb<ElemType,N_VAR,N_FIELDS>::set_novoNum(int * ptr)
 //{
 //  novoNum=ptr;
 //};
@@ -246,62 +248,72 @@ GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
 
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_finput(FILE * ptr)
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::set_finput(FILE * ptr)
 {
   // finput=ptr;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout(FILE * ptr)
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout(FILE * ptr)
 {
   //fout=ptr;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout1(FILE * ptr)
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout1(FILE * ptr)
 {
   //fout1=ptr;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout2(FILE * ptr)
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout2(FILE * ptr)
 {
   //fout2=ptr;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout3(FILE * ptr)
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::set_fout3(FILE * ptr)
 {
   //fout3=ptr;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-// void template <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::set_X0_ptr(double * ptr)
+// template <typename ElemType,int N_VAR,int N_FIELDS>
+// void GeProb<ElemType,N_VAR,N_FIELDS>::set_X0_ptr(double * ptr)
 // {
 //   X0=ptr;
 // };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> int GeProb<ElemType,N_VAR,N_FIELDS>::show_NG()
+template <typename ElemType,int N_VAR,int N_FIELDS>
+int GeProb<ElemType,N_VAR,N_FIELDS>::show_NG()
 {
   return NG;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> int GeProb<ElemType,N_VAR,N_FIELDS>::show_NUMNP()
+template <typename ElemType,int N_VAR,int N_FIELDS>
+int GeProb<ElemType,N_VAR,N_FIELDS>::show_NUMNP()
 {
 return NUMNP;
 };
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> int GeProb<ElemType,N_VAR,N_FIELDS>::show_NELEM()
+template <typename ElemType,int N_VAR,int N_FIELDS>
+int GeProb<ElemType,N_VAR,N_FIELDS>::show_NELEM()
 {
 return NELEM;
 };
 
 /*****************************************************************************/
 /*****************************************************************************/
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
 {
   int ng=NUMNP;// Numero global, inicialmente = NUMNP(number of mode points)
   int type_num;
@@ -461,99 +473,11 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::RenumerarNos(int numf,int & ND)
 
 };
 
-// *****************************************************
-// Condicoes de contorno
-// *****************************************************
-// ****************************************************************************************
+
+// *****************************************************************************
+// *****************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS>
-void GeProb<ElemType,N_VAR,N_FIELDS>::Condicoes_contorno(int *BC,std::vector< std::vector<int> > face_mask)
-// ****************************************************************************************
-{
-  // Inicializar o bflag com valores 0
-  for(int i=0;i<NG;i++) bflag.push_back(0); //bflag[i]=0;//bflag=0: conhecido
-  int naux,tipo,n;
-  int elnum,eltype,facenum;//newfacenum;
-  //fscanf(finput,"%d",&DNBC);
-  DNBC=BC[0];
-  naux=1;
-  nin=0;
-  nout=0;
-  for(int i=0;i<DNBC;i++){// BOUNDARY CONDITIONS
-    tipo=BC[naux++];
-    n=BC[naux++];
-    for(int i=0;i<n;i++){
-      elnum=BC[naux++];
-      eltype=BC[naux++];
-      facenum=BC[naux++];
-
-      // caso especial para o tetraedro
-      if(eltype==4){
-        int flag=0;
-        for(int il=0;il< face_mask.size() && flag==0; ++il) {
-          if(elnum==face_mask[i][4]) {
-            facenum=face_mask[elnum][facenum]; // Tetraedro
-            flag=1;
-          }
-        }
-      }
-
-      if(tipo == -1){// injetor
-        nin++;
-       // printf("set_border_bc injetor %d %d %d\n",elnum,eltype,newfacenum);
-        el[elnum].set_border_bc(border,facenum,-1);
-      }
-      else if(tipo == 1){ // produtor
-        nout++;
-       // printf("set_border_bc produtor %d %d %d\n",elnum,eltype,newfacenum);
-        el[elnum].set_border_bc(border,facenum,1);
-      }
-      else if(tipo==0) {
-        el[elnum].set_border_bc(border,facenum,50);
-      }
-    }
-  }
-  // ***************************************************
-  // Cria os vetores com as bordas de entrada e saida *
-  // ***************************************************
-   for (int i=0;i<NBORDER;++i) {
-     /*   double epsilon =1.0e-6;// incluido em 22/04/2014
-     // ************
-     // Similar ao que é feito no fenics
-    if( abs(V[border[i].Na].x) < epsilon && abs(V[border[i].Nb].x) < epsilon ) {border[i].tipo= -1;} // incluido em 22/04/2014
-     else // incluido em 22/04/2014
-       if( abs(V[border[i].Na].x - 1.0) < epsilon && abs(V[border[i].Nb].x - 1.0) < epsilon ) {border[i].tipo= 1;}// incluido em 22/04/2014
-       // incluido em 22/04/2014
-*/
-     int t=border[i].tipo;
-
-     if(t==-1) {
-  /*     elnum=border[i].elemento[0];// incluido em 22/04/2014
-       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-        el[elnum].set_border_bc(border,newfacenum,-1);// incluido em 22/04/2014
-    */
-       in_borders.push_back(i);
-    }
-    if(t==1) {
-   /*   elnum=border[i].elemento[0];// incluido em 22/04/2014
-      newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-      el[elnum].set_border_bc(border,newfacenum,1);// incluido em 22/04/2014
-     */
-      out_borders.push_back(i);
-    }
-     /*
-    else if(t==0) { // incluido em 22/04/2014
-      elnum=border[i].elemento[0];// incluido em 22/04/2014
-      newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-      el[elnum].set_border_bc(border,newfacenum,50);// incluido em 22/04/2014
-    } // incluido em 22/04/2014
-*/
-  }
-   printf("Processou DNBC= %d condicoes de contorno\n",DNBC);
-};
-
-// *****************************************************************************
-// *****************************************************************************
-template <typename ElemType,int N_VAR,int N_FIELDS> void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
+void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
 // *****************************************************************************
 {
   if(NumPart > 1) {
@@ -930,23 +854,27 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // Ler os parametros para criar a  malha do problema:  GeProb
   // *************************************************************************
   FILE * finput_geo, *finput_part;
+  char arq_part[256]; // arquivo da particao da malha
 
   if(myid==0) {
+    strcpy(arq_part,arq_geo); // copia o nome arq_geo em arq_part
+    strcat(arq_part,"_part\0"); // nome do arquivo contendo a particao tem terminacao _part
+
     finput_geo=fopen(arq_geo,"rb"); // Arquivo de geometria
 
     fscanf(finput_geo,"%d %d %d",&NUMNP,&NELEM,&DNBC);
-
-    strcat(arq_geo,"_part\0"); // Arquivo contendo a particao tem terminacao _part
-
-    if((finput_part=fopen(arq_geo,"rb"))!=NULL) {
+    
+    
+    if((finput_part=fopen(arq_part,"rb"))!=NULL) {
       printf("Lendo arquivo de Particao\n");
 
       fscanf(finput_part,"%d",&NumPart);
     }
     else {
-      printf("Nao existe arquivo de Particao!!!!\n");
+      printf("Nao existe arquivo de Particao %s!!!!\n",arq_part);
       NumPart=1;
     }
+    
     printf("myid %d Parametros NUMNP = %d NELEM = %d DNBC = %d NumPart = %d\n",myid,NUMNP,NELEM,DNBC,NumPart);
   } // myid == 0
 
@@ -955,7 +883,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // Broadcast os parametros da malha geometrica e dos espacos de funcoes
   // do problema
   // *************************************************************************
-  //MPI::COMM_WORLD.Barrier();
+  // MPI::COMM_WORLD.Barrier();
   Comm->Barrier();
   if(comm_size > 1) {
     cout << "Ponto MPI_Recebe_Dados myid " << myid << endl;
@@ -965,10 +893,11 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
     MPI::COMM_WORLD.Bcast(&DNBC,1,MPI::INT,0);
     MPI::COMM_WORLD.Bcast(&NumPart,1,MPI::INT,0);
   }
+  Comm->Barrier();
 #endif
 
-  V.resize(NUMNP);// = new Vertice [NUMNP];
-  el.resize(NELEM);// = new PhElem [NELEM];
+  V = new Vertice [NUMNP];
+  el= new ElemType [NELEM];
 
   // ********************************************************
   // Se o NumPart for incompativel com o numero de processos
@@ -976,7 +905,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // ********************************************************
   if(comm_size != NumPart) { // Nao faz a iteracao
     if(myid==0) {
-      printf("\ntemplate <typename ElemType,int N_VAR,int N_FIELDS> GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(): Numero de processadores eh diferente do numero de particoes\n");
+      printf("\nGeProb<>::Ler_e_Processar_malha(): Numero de processadores eh diferente do numero de particoes\n");
       printf("\nTerminar sem nada fazer\n\n");
     }
 
@@ -1030,7 +959,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // *************************************************************************
 
   if(comm_size > 1) {
-    //MPI::COMM_WORLD.Barrier();
+    // MPI::COMM_WORLD.Barrier();
     Comm->Barrier();
     MPI::COMM_WORLD.Bcast(buffer_V, controle[0],MPI::DOUBLE,0); // Vertices
     // MPI::COMM_WORLD.Barrier();
@@ -1065,7 +994,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // *****************************************************
   // ***** Construir Elementos Fisicos (PhElem) **********
   // *****************************************************
-  //10/07/2014
+  // 10/07/2014
   std::vector< std::vector<int> > face_mask_vec;
   std::vector<int> face_mask_local (5,0);
 
@@ -1079,7 +1008,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
     for(int j=0;j<numv;++j) {
       vert[j]=buffer_E[ii++];
     }
-    //el[i].set_NumLocalVars(1);// (N_FIELDS);
+    // el[i].set_NumLocalVars(1);// (N_FIELDS);
     el[i].set_ptvert(&V[0]);
     el[i].set_type(tipo);
     if(tipo==4) {
@@ -1096,7 +1025,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // ***** Construir Elementos Fisicos (PhElem) **********
   // *****************************************************
 
-  //*******************************************************
+  // *****************************************************
   // Construcao das aproximacoes das funcoes
   // *** Iniciar parametros dos elementos padroes
   // set_orders();
@@ -1108,11 +1037,12 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
 
   Processar_elementos();
   Construir_bordas();
-
+  Particionar_malha( buffer_Pa );
+  
+  // *****************************************************
+  // Especifico de DG_Prob
   cout << "dimensao em Ler_e_processar_malha "<< dim << endl;
   Condicoes_contorno( buffer_BC,face_mask_vec );
-
-  Particionar_malha( buffer_Pa );
 
 };
 
@@ -1380,6 +1310,103 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Construir_bordas()
     }
   }
 
+};
+
+// *****************************************************
+// Condicoes de contorno especializada de DG_Prob
+// *****************************************************
+// ****************************************************************************************
+template <typename ElemType,int N_VAR,int N_FIELDS>
+void GeProb<ElemType,N_VAR,N_FIELDS>::Condicoes_contorno(int *BC,
+                                                         std::vector< std::vector<int> > face_mask)
+// ****************************************************************************************
+{
+  // Inicializar o bflag com valores 0
+  for(int i=0;i<NG;i++) bflag.push_back(0); //bflag[i]=0;//bflag=0: conhecido
+  
+  int naux,tipo,n;
+  int elnum,eltype,facenum;//newfacenum;
+  
+  //fscanf(finput,"%d",&DNBC);
+  DNBC=BC[0];
+  naux=1;
+  nin=0;
+  nout=0;
+  
+  for(int k=0;k<DNBC;++k){// BOUNDARY CONDITIONS
+    tipo=BC[naux++]; // tipo de condicao de contorno
+    n=BC[naux++]; //< numero de elementos que tem essa condicao de contorno
+    
+    for(int j=0;j<n;++j){
+      elnum=BC[naux++]; //< numero do elemento
+      eltype=BC[naux++]; //< tipo do elemento
+      facenum=BC[naux++]; //< face do elemento onde vale a condicao de contorno
+      
+      // caso especial para o tetraedro
+      if(eltype==4){
+        int flag=0;
+        for(int i=0;i< face_mask.size() && flag==0; ++i) {
+          if(elnum==face_mask[i][4]) {
+            facenum=face_mask[elnum][facenum]; // Tetraedro
+            flag=1;
+          }
+        }
+      }
+      
+      if(tipo == -1){// injetor
+        nin++;
+        // printf("set_border_bc injetor %d %d %d\n",elnum,eltype,newfacenum);
+        el[elnum].set_border_bc(border,facenum,-1);
+      }
+      else if(tipo == 1){ // produtor
+        nout++;
+        // printf("set_border_bc produtor %d %d %d\n",elnum,eltype,newfacenum);
+        el[elnum].set_border_bc(border,facenum,1);
+      }
+      else if(tipo==0) {
+        el[elnum].set_border_bc(border,facenum,50);
+      }
+    }
+  } // for(int i=0; i< DNBC; i++)
+  
+  // ***************************************************
+  // Cria os vetores com as bordas de entrada e saida *
+  // ***************************************************
+  for (int i=0;i<NBORDER;++i) {
+    /*   double epsilon =1.0e-6;// incluido em 22/04/2014
+     // ************
+     // Similar ao que é feito no fenics
+     if( abs(V[border[i].Na].x) < epsilon && abs(V[border[i].Nb].x) < epsilon ) {border[i].tipo= -1;} // incluido em 22/04/2014
+     else // incluido em 22/04/2014
+     if( abs(V[border[i].Na].x - 1.0) < epsilon && abs(V[border[i].Nb].x - 1.0) < epsilon ) {border[i].tipo= 1;}// incluido em 22/04/2014
+     // incluido em 22/04/2014
+     */
+    int t=border[i].tipo;
+    
+    if(t==-1) {
+      /*     elnum=border[i].elemento[0];// incluido em 22/04/2014
+       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
+       el[elnum].set_border_bc(border,newfacenum,-1);// incluido em 22/04/2014
+       */
+      in_borders.push_back(i);
+    }
+    if(t==1) {
+      /*   elnum=border[i].elemento[0];// incluido em 22/04/2014
+       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
+       el[elnum].set_border_bc(border,newfacenum,1);// incluido em 22/04/2014
+       */
+      out_borders.push_back(i);
+    }
+    /*
+     else if(t==0) { // incluido em 22/04/2014
+     elnum=border[i].elemento[0];// incluido em 22/04/2014
+     newfacenum=border[i].num_local[0];// incluido em 22/04/2014
+     el[elnum].set_border_bc(border,newfacenum,50);// incluido em 22/04/2014
+     } // incluido em 22/04/2014
+     */
+  }
+  printf("Processou DNBC= %d condicoes de contorno\n",DNBC);
+  
 };
 
 #endif /* _GeProb_headers */

@@ -6,10 +6,9 @@
 //  Copyright (c) 2013 Murilo Almeida. All rights reserved.
 //
 # include "spectral.h"
-//#include "DG_Prob.h"
 
+// Global variables
 double p_in, p_out, sn_in, sn_ini, pw_ini;
-
 
 // ****************************************************************************
 void DG_Prob::preamble(char * arq_entrada)
@@ -28,20 +27,20 @@ void DG_Prob::preamble(char * arq_entrada)
     
     // Alteracoes no preamble - parte trazida de Ler_arquivos
     cout << "\nArquivo de Entrada: "<<arq_entrada<< '\n';
-    FILE *finput0;
+    FILE *finput0; // arquivo de entrada
     finput0=fopen(arq_entrada,"rb");
     // **********************
-		// Arquivo de Entrada   *
-		// **********************
+    // Arquivo de Entrada   *
+    // **********************
+  
     // Ler o nome do arquivo de dados da geometria grade
-    fscanf(finput0,"%s",arq_geo);  strcat(arq_geo,"\0");  // Linha 1
+    fscanf(finput0,"%s",arq_geo); strcat(arq_geo,"\0");// Linha 1
     cout << "Arquivo de Geometria: "<<arq_geo<< '\n';
     
     // Ler o nome do arquivo de saida
-    fscanf(finput0,"%s",arq_sai);  // Linha 2
+    fscanf(finput0,"%s",arq_sai); strcat(arq_sai,"\0");// Linha 2
     strcpy(arq_rst,arq_sai);
     strcpy(arq_flu,arq_sai);
-    strcat(arq_sai,"\0");
     cout << "Arquivo de Saida: "<<arq_sai<< '\n';
     strcat(arq_rst,".rst\0");
     printf("Arquivo para re-inicio %s\n",arq_rst);
@@ -49,30 +48,28 @@ void DG_Prob::preamble(char * arq_entrada)
     cout << "Arquivo de Saida de fluxos: "<<arq_flu<< '\n';
     
     // Ler o nome do arquivo de eco
-    fscanf(finput0,"%s",arq_eco);  strcat(arq_eco,"\0");  // Linha 3
+    fscanf(finput0,"%s",arq_eco); strcat(arq_eco,"\0");  // Linha 3
     cout << "Arquivo de Eco: "<<arq_eco<< "\n\n";
     
     // Ler o numero de espacos interpolantes (N_FIELDS)
     //fscanf(finput0,"%d %*s",&N_FIELDS);
-    fscanf(finput0,"%*s"); // Ler e descarta a linha contendo "NFIELDS"
+    fscanf(finput0,"%*s"); // Ler e descarta a linha contendo "N_FIELDS"; N_FIELDS especificado em MyOptions.h
     for(int i =0; i<N_FIELDS;++i) {
 			// Ler os dados de cada Field
       fscanf(finput0,"%d %d %d",&Field[i].ordem, &Field[i].P, &Field[i].Q);
     }
     
-    // Ler o numero de variaveis (N_var)
+    // Ler o numero de variaveis (N_VAR); especificado em MyOptions.h; N_VAR pode ser maior que N_FIELDS;
     fscanf(finput0,"%*s");// Ler string e descarta
     
     for(int i =0; i<N_VAR;++i) {
-			//Ler os dados de cada variavel
+      //Ler os dados de cada variavel
       fscanf(finput0,"%d",&FieldOfVar[i]);
     }
     
-    fscanf(finput0,"%s",arq_par);  // nome do arquivo de parametros
-    strcat(arq_par,"\0");
-    fclose(finput0);
-  }
-  // terminou myid ==0
+    fscanf(finput0,"%s",arq_par); strcat(arq_par,"\0"); // nome do arquivo de parametros
+    fclose(finput0); // fechou o arquivo de entrada
+  } // terminou if(myid == 0)
 
 #ifdef HAVE_MPI
   Comm->Barrier();
@@ -92,12 +89,12 @@ void DG_Prob::preamble(char * arq_entrada)
   // *************************************************************************
   // Ler os parametros especificos do problema
   // *************************************************************************
- 
+  
   Ler_Arquivo_Dados_DG(arq_par); // formato novo do arquivo de entrada
  
   Ler_e_Processar_malha(arq_geo);
- 
- 
+  
+  //Condicoes_contorno
   // *************************************************
   // Criar vetores globais para tracos de pw e sn    *
   // *************************************************
@@ -139,43 +136,9 @@ void DG_Prob::preamble(char * arq_entrada)
   }
 }
 
-// *****************************************************************************
-void DG_Prob::MPI_Recebe_Dados_DG()
-// *****************************************************************************
-{
-  MPI::COMM_WORLD.Bcast(&restart_flag,1,MPI::INT,0);
-  MPI::COMM_WORLD.Bcast(&mun,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&muw,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&rhon,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&rhow,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&theta,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&pd,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(gravidade,3,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&perm,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&porosidade,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&sigma,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&sigma1,1,MPI::DOUBLE,0);//para termos com pc; penaliza descontinuidade em sn
-  MPI::COMM_WORLD.Bcast(&beta,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&Dt0,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&fatordt,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&t_final,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&tprint,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&precisao,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&qdado,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&tncut,1,MPI::INT,0);
-// termos de fontes
-  MPI::COMM_WORLD.Bcast(&p_in,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&p_out,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&sn_in,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&sn_ini,1,MPI::DOUBLE,0);
-  MPI::COMM_WORLD.Bcast(&pw_ini,1,MPI::DOUBLE,0);
-} 
-
-
 // ****************************************************************************
 void DG_Prob::Ler_Arquivo_Dados_DG(char *arq_par)
 // ****************************************************************************
-//(char *str,double *coord,int *Ed,int *BC)
 {
   if(myid==0)
   {
@@ -215,6 +178,39 @@ void DG_Prob::Ler_Arquivo_Dados_DG(char *arq_par)
   //MPI::COMM_WORLD.Barrier();
   Comm->Barrier();
   if(comm_size > 1) MPI_Recebe_Dados_DG();
+  Comm->Barrier();
 #endif
  };
+
+// *****************************************************************************
+void DG_Prob::MPI_Recebe_Dados_DG()
+// *****************************************************************************
+{
+  MPI::COMM_WORLD.Bcast(&restart_flag,1,MPI::INT,0);
+  MPI::COMM_WORLD.Bcast(&mun,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&muw,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&rhon,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&rhow,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&theta,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&pd,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(gravidade,3,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&perm,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&porosidade,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&sigma,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&sigma1,1,MPI::DOUBLE,0);//para termos com pc; penaliza descontinuidade em sn
+  MPI::COMM_WORLD.Bcast(&beta,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&Dt0,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&fatordt,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&t_final,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&tprint,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&precisao,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&qdado,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&tncut,1,MPI::INT,0);
+  // termos de fontes
+  MPI::COMM_WORLD.Bcast(&p_in,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&p_out,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&sn_in,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&sn_ini,1,MPI::DOUBLE,0);
+  MPI::COMM_WORLD.Bcast(&pw_ini,1,MPI::DOUBLE,0);
+};
 

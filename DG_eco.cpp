@@ -1,5 +1,8 @@
 # include "spectral.h"
 #include "DG_Prob.h"
+// Variaveis globais
+extern  double p_in, p_out, sn_in, sn_ini, pw_ini;
+
 void DG_Prob::DG_eco()
 {
   printf("Entrando em DG_Prob::DG_eco\n");
@@ -45,6 +48,12 @@ void DG_Prob::DG_eco()
     fprintf(fout1,"precisao     = %e\n",precisao);
     fprintf(fout1,"fonte        = %e\n",qdado);
     fprintf(fout1,"tncut        = %d\n",tncut);
+    fprintf(fout1,"p_in         = %e\n",p_in);
+    fprintf(fout1,"p_out        = %e\n",p_out);
+    fprintf(fout1,"sn_in        = %e\n",sn_in);
+    fprintf(fout1,"sn_ini       = %e\n",sn_ini);
+    fprintf(fout1,"pw_ini       = %e\n",pw_ini);
+
     // ****************************************************************************************    
     fprintf(fout1,"\n******************************************************");
     fprintf(fout1,"**************************\n");
@@ -158,11 +167,11 @@ void DG_Prob::DG_eco()
        fprintf(fout1,"Mapa global das arestas:%4d\n",el[i].show_gbtrbmap());
        fprintf(fout1,"aresta border tipo vmapM vmapP\n");
        for(int k=0; k < el[i].show_ptr_stdel(0)->nborder_val(); k++) {
- 	int a = el[i].show_border_num(k);
- 	int t = border[a].tipo;
- 	int M = el[i].show_stgbtrbmapM(k);
- 	int P = el[i].show_stgbtrbmapP(k);
- 	fprintf(fout1,"%2d       %4d %4d %5d %5d\n",k,a,t,M,P);
+         int a = el[i].show_border_num(k);
+         int t = border[a].tipo;
+         int M = el[i].show_stgbtrbmapM(k);
+         int P = el[i].show_stgbtrbmapP(k);
+         fprintf(fout1,"%2d       %4d %4d %5d %5d\n",k,a,t,M,P);
        }
      }
 

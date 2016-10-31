@@ -1,13 +1,51 @@
-# include "spectral.h"
+/*****************************************************************************/
+/*****************************************************************************/
+#undef __ED_run
+#define __ED_run
+/*****************************************************************************/
+/*****************************************************************************/
+# include "ED_Prob.h"
+# include "PhElem.hpp"
+# include "GeProb.hpp"
+
+// Definicao da classe ED_Prob
+ED_Prob::ED_Prob(Epetra_Comm& comm) : GeProb<MyElem,2,2>::GeProb(comm)
+{};
+
+ED_Prob::~ED_Prob()
+{
+  /*
+  cout << "\nED_Prob::~ED_Prob()\n";
+  // *************************************************************************
+  // Liberar memoria local
+  // *************************************************************************
+  const int nsat=el[0].show_ptr_stdel(sat)->nn_val();// Num de modos para saturacao
+  const int npres=el[0].show_ptr_stdel(pres)->nn_val();// Num de modos para pressao
+  cout << "Ponto1 nsat ="<< nsat<< " npres = "<< npres << "\n";
+  liberar_mem_local(nsat,npres);
+  
+  for(int i = 0; i < NELEM; i++) {
+    el[i].finaliza_vetores();
+  }
+  
+  
+  delete [] gbtrpw;gbtrpw=nullptr;
+  delete [] gbtrsn;gbtrsn=nullptr;
+  
+  cout << "Final de ED_Prob::~ED_Prob()\n";
+  */
+};
+
+
 // ****************************************************************************
 // ****************************************************************************
-void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
+void ED_Prob::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
 // ****************************************************************************
 {
   printf("\nSolveElast2D_dyn (COMECO)\n");
-  // Compatibilidade de NFIELDS
-  if(NFIELDS != 2){
-    printf("ERRO: NFIELDS (= %d) != 2",NFIELDS);
+  // Compatibilidade de N_VAR (N_VAR eh uma variavel private de ED_Prob
+  if(N_VAR != 2){
+    printf("ERRO: N_VAR (= %d) != 2",N_VAR);
     exit(0);
   }
   // *************************************************************************
@@ -52,10 +90,10 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
     //printf("Termino do elemento %d\n",e);
     Stdel * pointer=el[e].show_stdel();
     int nn=pointer->nn_val();
-    int Nfields=el[e].show_NumFields();
-    int nl=nn*Nfields;
+    int NLV=el[e].show_NumLocalVars();
+    int nl=nn*NLV;
     int nb=pointer->nb_val();
-    int Nb=nb*Nfields;
+    int Nb=nb*NLV;
     int Ni=nl-Nb;
     // Alocacao dinamica das matrizes
     NEWMAT::Matrix * ptKcomp   = new NEWMAT::Matrix(Nb,Nb);
@@ -76,7 +114,7 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
   // **************************************************************************
 
   int nz;
-  nz=el[0].show_stdel()->nb_val()*el[0].show_NumFields();
+  nz=el[0].show_stdel()->nb_val()*el[0].show_NumLocalVars();
   nz*=(nz*NELEM);
   printf("nz=%4d\n",nz);
 
@@ -92,7 +130,7 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
     double * Tx = new double [nz];
 
 
-    // 2***********************************************************************
+    // ************************************************************************
     // Montagem da Matriz A em forma de Ti, Tj, Tx
     // ************************************************************************
     int NC=NumC-1;
@@ -102,23 +140,23 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
       for(int i=0;i<NumD;i++)C[i][j]=0.0;
     }
     int nb=ptstdel->nb_val();
-    int Nb=nb*NFIELDS;
-    int nl=NFIELDS*ptstdel->nn_val();
+    int Nb=nb*N_VAR;
+    int nl=N_VAR*ptstdel->nn_val();
     int count =0;
     //printf("Ponto 7a: Loop sobre os elementos\n");
     for(int e=0;e<NELEM;e++){
       // printf("%d ",e);
       el[e].make_Kcomp_Elast2D_dyn(lambda,mu,a);
       for(int i=0;i<nb;i++){
-	for(int ia=0;ia<NFIELDS;ia++){
+	for(int ia=0;ia<N_VAR;ia++){
 	  int ii=novoNum[el[e].map(i,ia)];
-	  int il=i*NFIELDS+ia;
+	  int il=i*N_VAR+ia;
 	  if(ii>NG)
 	    printf("Erro no mapeamento do elemento %d indice = %d\n",e,i);
 	  if(ii<NumD){
 	    for(int j=0;j<nb;j++){
-	      for(int ja=0;ja<NFIELDS;ja++){
-		int jl=j*NFIELDS+ja;
+	      for(int ja=0;ja<N_VAR;ja++){
+		int jl=j*N_VAR+ja;
 		int jj=novoNum[el[e].map(j,ja)];
 		if(jj>NG)
 		  printf("Erro no mapeamento do elemento %d indice = %d\n",e,j);
@@ -174,7 +212,7 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
     // ***********VETOR B****************************************************
     double B[NumD];// vetor
     Vector BSchur(0,ND);// vetor para a armazenar a contribuicao da c.d.c.
-    double aux[NFIELDS];
+    double aux[N_VAR];
     // ************************************************************************
     // Parte iterativa comeca aqui
     // ************************************************************************
@@ -202,13 +240,13 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
       //    }
       //  }
       // Condicao de contorno inicial de solo
-      if(t==0.0)B[novoNum[110*NFIELDS+1]]=1.0e9;
+      if(t==0.0)B[novoNum[110*N_VAR+1]]=1.0e9;
 
       for(int e=0;e<NELEM;e++){
  	el[e].make_vector_Elast2D_dyn(a);
  	for(int i=0;i<nb;i++){
  	  el[e].VectorElast2D(i,aux);
- 	  for(int ia=0;ia<NFIELDS;ia++){
+ 	  for(int ia=0;ia<N_VAR;ia++){
  	    int ii=novoNum[el[e].map(i,ia)];
  	    if(ii>NG)
  	      printf("Erro no mapeamento do elemento %d indice = %d\n",e,i);
@@ -283,10 +321,10 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
       // ^^^^^^^^^^^^^^^^^^^ATUALIZACAO DE X0^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
       // **********************************************************************
       //   printf("DESLOCAMENTO INICIAL\ncoeficientes modais\n");
-      //   for(int ia=0;ia<NFIELDS;ia++){
+      //   for(int ia=0;ia<N_VAR;ia++){
       //     printf("Campo %2d\n",ia);
-      //     for(int i=0;i<NG/NFIELDS;i++){
-      //       int ig=i*NFIELDS+ia;
+      //     for(int i=0;i<NG/N_VAR;i++){
+      //       int ig=i*N_VAR+ia;
       //       printf("i= %3d X0=%14.5e \n",i,X0[ig]);
       //     }
       //   }
@@ -304,13 +342,13 @@ void GeProb::SolveElast2D_dyn(FILE * fout, double lambda, double mu)
  	//Updates internal modes and outputs result to file
       }
       int no=112;
-      fprintf(fout,"%11.4e %11.4e ",U[no*NFIELDS],U[no*NFIELDS+1]);
+      fprintf(fout,"%11.4e %11.4e ",U[no*N_VAR],U[no*N_VAR+1]);
       no=114;
-      fprintf(fout,"%11.4e %11.4e ",U[no*NFIELDS],U[no*NFIELDS+1]);
+      fprintf(fout,"%11.4e %11.4e ",U[no*N_VAR],U[no*N_VAR+1]);
       no=116;
-      fprintf(fout,"%11.4e %11.4e ",U[no*NFIELDS],U[no*NFIELDS+1]);
+      fprintf(fout,"%11.4e %11.4e ",U[no*N_VAR],U[no*N_VAR+1]);
       no=118;
-      fprintf(fout,"%11.4e %11.4e\n",U[no*NFIELDS],U[no*NFIELDS+1]);
+      fprintf(fout,"%11.4e %11.4e\n",U[no*N_VAR],U[no*N_VAR+1]);
       // ^^^^^^^^^^^^^^^^^^^^^^^^^^^OUTPUT^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
       // **********************************************************************
     }

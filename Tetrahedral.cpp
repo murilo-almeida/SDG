@@ -623,11 +623,13 @@ void Tetrahedral::make_mass_matrices(int NFields)
 // ************************************************************************
 void Tetrahedral::ordenar4(int n[], int f_mask[])
 {
+// ********************************* Testada em 30/10/2016 *************
   int M1=0;
   int M2=0;
   int temp=n[3];
   int i;
   int n_old[4];
+  int f_mask[4];
   for(i=0;i<4;i++)n_old[i]=n[i];
   for(i=0;i<4;i++){
     if(n[i]>M1) {
@@ -673,34 +675,40 @@ void Tetrahedral::ordenar4(int n[], int f_mask[])
   // Renumerar as faces
   // Numeracao segue esquema do Gambit
   // face_numero = f_mask[face_original(fornecida pelo Gambit)]
+  
   // Face 0 ABC recebe a face antiga
-  if(n[3]==n_old[3])f_mask[0]=0;
-  else 
-    if(n[3]==n_old[2])f_mask[1]=0;
-    else 
-      if(n[3]==n_old[0])f_mask[2]=0;
-      else f_mask[3]=0;
+  if(n[3]==n_old[3])     f_mask[0]=0;
+  else
+    if(n[3]==n_old[2])   f_mask[1]=0;
+    else
+      if(n[3]==n_old[1]) f_mask[2]=0;
+      else               f_mask[3]=0;
+  
   // Face 1 ABD recebe a face antiga
-  if(n[2]==n_old[3])f_mask[0]=1;
+  if(n[2]==n_old[3])     f_mask[0]=1;
   else
-    if(n[2]==n_old[2])f_mask[1]=1;
-    else 
-      if(n[2]==n_old[0])f_mask[2]=1;
-      else f_mask[3]=1;
+    if(n[2]==n_old[2])   f_mask[1]=1;
+    else
+      if(n[2]==n_old[1]) f_mask[2]=1;
+      else               f_mask[3]=1;
+  
   // Face 2 BCD recebe a face antiga
-  if(n[0]==n_old[3])f_mask[0]=2;
+  if(n[1]==n_old[3])     f_mask[0]=2;
   else
-    if(n[0]==n_old[2])f_mask[1]=2;
-    else 
-      if(n[0]==n_old[0])f_mask[2]=2;
-      else f_mask[3]=2;
+    if(n[1]==n_old[2])   f_mask[1]=2;
+    else
+      if(n[1]==n_old[1]) f_mask[2]=2;
+      else               f_mask[3]=2;
+  
   // Face 3 ACD recebe a face antiga
-  if(n[1]==n_old[3])f_mask[0]=3;
+  if(n[0]==n_old[3])     f_mask[0]=3;
   else
-    if(n[1]==n_old[2])f_mask[1]=3;
-    else 
-      if(n[1]==n_old[0])f_mask[2]=3;
-      else f_mask[3]=3;
+    if(n[0]==n_old[2])   f_mask[1]=3;
+    else
+      if(n[0]==n_old[1]) f_mask[2]=3;
+      else               f_mask[3]=3;
+// **********************************
+ 
 };
 */
 

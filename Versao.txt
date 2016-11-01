@@ -5,4 +5,8 @@ derivada de PhElem, para conter procedimentos
 especificos para escoamento de dois fluidos imisciveis em meios porosos
 usando Galerkin Descontinuo. Assim a classe PhElem ficou menor e contendo
 so procedimentos gerais.
-.
+
+Em 01/11/2016 alterei a sequencia de leitura e processamento das
+condicoes de contorno. Essas sao lidas marcada em GeProb e o
+processamento e feito em DG_Elem. Retirei a funcao
+PhElem::set_border_bc.

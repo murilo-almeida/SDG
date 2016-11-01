@@ -40,8 +40,8 @@ VER_MIN = 0
 
 ####### Arquivos que precisam ser mudados de acordo com o seu objetivo
 
-HPP = 		GeProb.hpp \
-		PhElem.hpp
+TEMPLATED = 	GeProb.hpp \
+                PhElem.hpp 	
 
 HEADERS =	DG_EI_Header.h\
 		DG_Prob.h\
@@ -176,16 +176,16 @@ clean:
 
 ####### Compile 
 
-$(OBJECTS): $(HEADERS) $(HPP)
+$(OBJECTS): $(HEADERS) $(TEMPLATED)
 
-$(OBJECTS_IP): $(HEADERS) $(HPP)
+$(OBJECTS_IP): $(HEADERS) $(TEMPLATED)
 
-$(OBJECTS_CF): $(HEADERS) $(HPP)
+$(OBJECTS_CF): $(HEADERS) $(TEMPLATED)
 
-main.o: main.cpp $(HEADERS) $(HPP)
+main.o: main.cpp $(HEADERS) $(TEMPLATED)
 	$(CXX) -c $(CXX_FLAGS) $(INCLUDE_DIRS) -o $@  main.cpp
 
-ValoresInterpolados.o: ValoresInterpolados.cc $(HEADERS) $(HPP)
+ValoresInterpolados.o: ValoresInterpolados.cc $(HEADERS) $(TEMPLATED)
 	$(CXX) -c $(CXX_FLAGS) $(INCLUDE_DIRS) -o $@  ValoresInterpolados.cc
 
 teste_ordenar.o: teste_ordenar.cc

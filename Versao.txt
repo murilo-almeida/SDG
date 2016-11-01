@@ -1,3 +1,8 @@
 Atualizado em 28/10/2016 por Murilo para usar templated GeProb e PhElem.
 
+Em 31/10/2016 acrescentou a classe DG_Elem (DG_Elem.hpp e DG_Elem.cpp),
+derivada de PhElem, para conter procedimentos
+especificos para escoamento de dois fluidos imisciveis em meios porosos
+usando Galerkin Descontinuo. Assim a classe PhElem ficou menor e contendo
+so procedimentos gerais.
 .

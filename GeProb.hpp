@@ -46,7 +46,7 @@ class GeProb
 
   void set_id(const int rank, const int size){myid=rank;comm_size=size;};
  // void set_dim(const int & d) {dim = d;};
-  void Condicoes_contorno(int *, std::vector < std::vector<int> >);
+  void Marcar_condicoes_contorno(int *, std::vector < std::vector<int> >);
   void Processar_elementos();
 
   //void set_bflag(int * ptr);
@@ -850,6 +850,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::ResolverComTrilinos(const std::string Pack
 template <typename ElemType,int N_VAR,int N_FIELDS>
 void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
 {
+  //Seq 01.02: GeProb::Ler_e_Processar_malha
   // *************************************************************************
   // Ler os parametros para criar a  malha do problema:  GeProb
   // *************************************************************************
@@ -1038,14 +1039,12 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   Processar_elementos();
   Construir_bordas();
   Particionar_malha( buffer_Pa );
-  
-  // *****************************************************
-  // Especifico de DG_Prob
+  Marcar_condicoes_contorno( buffer_BC,face_mask_vec );
+ 
   cout << "dimensao em Ler_e_processar_malha "<< dim << endl;
-  Condicoes_contorno( buffer_BC,face_mask_vec );
-
 };
 
+// *****************************************************************************
 // 08/07/2014 \/ \/ \/ \/ \/ \/ \/ \/
 // *****************************************************************************
 // Calcula os valores iniciais para numerar os modos sobre os elementos da malha
@@ -1317,7 +1316,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Construir_bordas()
 // *****************************************************
 // ****************************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS>
-void GeProb<ElemType,N_VAR,N_FIELDS>::Condicoes_contorno(int *BC,
+void GeProb<ElemType,N_VAR,N_FIELDS>::Marcar_condicoes_contorno(int *BC,
                                                          std::vector< std::vector<int> > face_mask)
 // ****************************************************************************************
 {
@@ -1327,11 +1326,8 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Condicoes_contorno(int *BC,
   int naux,tipo,n;
   int elnum,eltype,facenum;//newfacenum;
   
-  //fscanf(finput,"%d",&DNBC);
   DNBC=BC[0];
   naux=1;
-  nin=0;
-  nout=0;
   
   for(int k=0;k<DNBC;++k){// BOUNDARY CONDITIONS
     tipo=BC[naux++]; // tipo de condicao de contorno
@@ -1343,70 +1339,21 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Condicoes_contorno(int *BC,
       facenum=BC[naux++]; //< face do elemento onde vale a condicao de contorno
       
       // caso especial para o tetraedro
+      // Nao testado ainda. 01/11/2016
       if(eltype==4){
         int flag=0;
         for(int i=0;i< face_mask.size() && flag==0; ++i) {
           if(elnum==face_mask[i][4]) {
-            facenum=face_mask[elnum][facenum]; // Tetraedro
+            facenum=face_mask[i][facenum]; // Tetraedro
             flag=1;
           }
         }
       }
       
-      if(tipo == -1){// injetor
-        nin++;
-        // printf("set_border_bc injetor %d %d %d\n",elnum,eltype,newfacenum);
-        el[elnum].set_border_bc(border,facenum,-1);
-      }
-      else if(tipo == 1){ // produtor
-        nout++;
-        // printf("set_border_bc produtor %d %d %d\n",elnum,eltype,newfacenum);
-        el[elnum].set_border_bc(border,facenum,1);
-      }
-      else if(tipo==0) {
-        el[elnum].set_border_bc(border,facenum,50);
-      }
-    }
-  } // for(int i=0; i< DNBC; i++)
-  
-  // ***************************************************
-  // Cria os vetores com as bordas de entrada e saida *
-  // ***************************************************
-  for (int i=0;i<NBORDER;++i) {
-    /*   double epsilon =1.0e-6;// incluido em 22/04/2014
-     // ************
-     // Similar ao que é feito no fenics
-     if( abs(V[border[i].Na].x) < epsilon && abs(V[border[i].Nb].x) < epsilon ) {border[i].tipo= -1;} // incluido em 22/04/2014
-     else // incluido em 22/04/2014
-     if( abs(V[border[i].Na].x - 1.0) < epsilon && abs(V[border[i].Nb].x - 1.0) < epsilon ) {border[i].tipo= 1;}// incluido em 22/04/2014
-     // incluido em 22/04/2014
-     */
-    int t=border[i].tipo;
-    
-    if(t==-1) {
-      /*     elnum=border[i].elemento[0];// incluido em 22/04/2014
-       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-       el[elnum].set_border_bc(border,newfacenum,-1);// incluido em 22/04/2014
-       */
-      in_borders.push_back(i);
-    }
-    if(t==1) {
-      /*   elnum=border[i].elemento[0];// incluido em 22/04/2014
-       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-       el[elnum].set_border_bc(border,newfacenum,1);// incluido em 22/04/2014
-       */
-      out_borders.push_back(i);
-    }
-    /*
-     else if(t==0) { // incluido em 22/04/2014
-     elnum=border[i].elemento[0];// incluido em 22/04/2014
-     newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-     el[elnum].set_border_bc(border,newfacenum,50);// incluido em 22/04/2014
-     } // incluido em 22/04/2014
-     */
-  }
-  printf("Processou DNBC= %d condicoes de contorno\n",DNBC);
-  
+      el[elnum].set_border_tipo(border,facenum,tipo); //incluido 01/nov/2016
+    } // incluido 01/nov/2016
+  } // for(int i=0; i< DNBC; i++) incluido 01/nov/2016
 };
-
+// ******************************************************************************************
+ 
 #endif /* _GeProb_headers */

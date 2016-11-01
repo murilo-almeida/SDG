@@ -145,7 +145,7 @@ public:
   void transformacao_direta(double f[],const int & ivar);
   void teste_transformacao_direta(FILE * fin, FILE * fout, const int & npoints,const double coord[]);
   
-  void set_border_bc(/*std::vector<EDGE>&*/EDGE * border,const int & n,const int & t);
+  void set_border_tipo( EDGE * border,const int & aresta,const int & t);
   void set_border_num(const int  & aresta, const int & num);
   //void Atualizar_valores(FILE * fout = NULL);// NULL eh o valor default
   void Imprimir_valores(FILE * fileout, const int & npoints, const double coord[]);
@@ -178,7 +178,6 @@ public:
   
   void vetor_superficie(const int & num_local,double & area, double normal[3]);
   
-   
   
   //private:
 protected:
@@ -515,80 +514,20 @@ void PhElem<NumVariaveis>::set_ptvert(const Vertice * pointer)
   ptvert=pointer;
 };
 
+
 // ****************************************************************************
-// Especifica os valores das condicoes de contorno
+// Especifica o tipo(label) da borda
 // ****************************************************************************
 template<int NumVariaveis>
-void PhElem<NumVariaveis>::set_border_bc( EDGE * border,const int & aresta,const int & t)
+void PhElem<NumVariaveis>::set_border_tipo(EDGE * border,
+                                           const int & aresta,const int & t)
 {
-  int ndim = ptr_stdel[0]->ndim_val();
   int en = border_num[aresta];
-  // printf("entrou PhElem<NumVariaveis>::set_border_bc: border_num=%d\n",en);
+  // printf("entrou PhElem::set_border_tipo: border_num=%d\n",en);
   border[en].tipo=t;
-  
-  double x,y,aux;
-  
-  switch (ndim) {
-      
-    case 1:
-      
-      //printf("Entrando set_border_bc\n");
-      if(t == -1 || t == 1){
-        int na=border[en].Na;
-        x=ptvert[na].x;
-        y=0.0;
-        border[en].pdir = new double [1];
-        border[en].pdir[0]=funcao_pdir(x,y,t);
-        if(t==-1){
-          border[en].sdir = new double [1];
-          border[en].sdir[0]=funcao_sdir(x,y);
-        }
-      }
-      //printf("Saindo de set_border_bc edge number = %d\n",en);
-      break;
-      
-    case 2:
-      
-      if(t == -1 || t == 1){
-        // Alocar memoria para condicoes de contorno de Dirichlet
-        int qmax=ptr_stdel[0]->qborder_val();
-        double xq[qmax],w[qmax];
-        double Dtemp[MAXQ][MAXQ];
-        //Mat2<double> Dtemp(qmax,qmax);
-        Gauss_Jacobi_parameters(qmax,0.0,0.0,xq,w,Dtemp);
-        // *******************************************************
-        int na=border[en].Na;
-        int nb=border[en].Nb;
-        double xa=ptvert[na].x;
-        double ya=ptvert[na].y;
-        double xb=ptvert[nb].x;
-        double yb=ptvert[nb].y;
-        double xsum=(xb+xa)*0.5;
-        double xdif=(xb-xa)*0.5;
-        double ysum=(yb+ya)*0.5;
-        double ydif=(yb-ya)*0.5;
-        
-        border[en].pdir = new double [qmax];
-        for(int i=0;i<qmax;i++){
-          aux=xq[i];
-          x=xsum+xdif*aux;
-          y=ysum+ydif*aux;
-          border[en].pdir[i]=funcao_pdir(x,y,t);
-        }
-        if(t==-1){
-          border[en].sdir = new double[qmax];
-          for(int i=0;i<qmax;i++){
-            aux=xq[i];
-            x=xsum+xdif*aux;
-            y=ysum+ydif*aux;
-            border[en].sdir[i]=funcao_sdir(x,y);
-          }
-        }
-      }
-      break;
-  } // switch (ndim)
-  //printf("saindo de PhElem<NumVariaveis>::set_border_bc\n");
+  // Aqui termina a marcacao do tipo da borda
 };
+
 // ****************************************************************************
 template<int NumVariaveis>
 void PhElem<NumVariaveis>::set_border_num(const int & aresta, const int & num)

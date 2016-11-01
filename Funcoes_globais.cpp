@@ -223,7 +223,7 @@ void tetrahedro_faz_face_mask(const int & n_in,int ver_temp[],std::vector<int> &
       if(flag == 1) face_mask[m]=i; //faces coincidem
     }
   }
-}
+};
 
 // Hexahedral internal Face Modal Connectivity
 // To locate uniquely the modes on the faces of neighboring elements

@@ -1825,5 +1825,5 @@ void DG_Elem::finaliza_vetores()
     delete [] TrKgrad_pc;TrKgrad_pc=nullptr;
   }
 };
-
+// ***************************************************************************************
 

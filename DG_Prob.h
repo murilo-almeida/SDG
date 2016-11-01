@@ -112,7 +112,7 @@ class DG_Prob : public GeProb<MyElem,2,2>
                 Epetra_Vector* FVec,
                 Epetra_RowMatrix* Jacobian);
   
-  void Condicoes_contorno(int *BC, std::vector< std::vector<int> > face_mask);
+  void Processa_condicoes_contorno(/*int *BC, std::vector< std::vector<int> > face_mask*/);
   // ***************************************************************************
 
  private:

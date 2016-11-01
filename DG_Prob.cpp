@@ -652,18 +652,16 @@ void DG_Prob::projetar_C0(FILE *file,double (*func)(double,double,double),
 // Condicoes de contorno especializada de DG_Prob
 // *****************************************************
 // ****************************************************************************************
-//template <typename ElemType,int N_VAR,int N_FIELDS>
-void /*GeProb<ElemType,N_VAR,N_FIELDS>*/DG_Prob::Condicoes_contorno(int *BC,
-                                                                    std::vector< std::vector<int> > face_mask)
+void DG_Prob::Processa_condicoes_contorno()
 // ****************************************************************************************
 {
-  cout << "Usando DG_Prob::Condicoes_contorno"<<std::endl;
+  cout << "Usando DG_Prob::Processa_condicoes_contorno"<<std::endl;
   // Inicializar o bflag com valores 0
   for(int i=0;i<NG;i++) bflag.push_back(0); //bflag[i]=0;//bflag=0: conhecido
   
-  int naux,tipo,n;
-  int elnum,eltype,facenum;//newfacenum;
-  
+  int nin = 0;
+  int nout = 0;
+  double x,y,aux;
   
   // ***************************************************
   // Cria os vetores com as bordas de entrada e saida *
@@ -677,29 +675,52 @@ void /*GeProb<ElemType,N_VAR,N_FIELDS>*/DG_Prob::Condicoes_contorno(int *BC,
      if( abs(V[border[i].Na].x - 1.0) < epsilon && abs(V[border[i].Nb].x - 1.0) < epsilon ) {border[i].tipo= 1;}// incluido em 22/04/2014
      // incluido em 22/04/2014
      */
-    int t=border[i].tipo;
     
-    if(t==-1) {
-      /*     elnum=border[i].elemento[0];// incluido em 22/04/2014
-       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-       el[elnum].set_border_bc(border,newfacenum,-1);// incluido em 22/04/2014
-       */
-      in_borders.push_back(i);
+    
+    int t=border[i].tipo;
+   
+    if(t == -1 || t == 1){
+      // Alocar memoria para condicoes de contorno de Dirichlet
+      int qmax=(el[border[i].elemento[0]].show_ptr_stdel(0))->qborder_val();
+      double xq[qmax],w[qmax];
+      double Dtemp[MAXQ][MAXQ];
+      //Mat2<double> Dtemp(qmax,qmax);
+      Gauss_Jacobi_parameters(qmax,0.0,0.0,xq,w,Dtemp);
+      // *******************************************************
+      int na=border[i].Na;
+      int nb=border[i].Nb;
+      double xa=V[na].x;
+      double ya=V[na].y;
+      double xb=V[nb].x;
+      double yb=V[nb].y;
+      double xsum=(xb+xa)*0.5;
+      double xdif=(xb-xa)*0.5;
+      double ysum=(yb+ya)*0.5;
+      double ydif=(yb-ya)*0.5;
+      
+      border[i].pdir = new double [qmax];
+      for(int q=0;q<qmax;++q){
+        aux=xq[q];
+        x=xsum+xdif*aux;
+        y=ysum+ydif*aux;
+        border[i].pdir[q]=funcao_pdir(x,y,t);
+      }
+      if(t==-1){
+        nin++;
+        in_borders.push_back(i);
+        border[i].sdir = new double[qmax];
+        for(int q=0;q<qmax;++q){
+          aux=xq[q];
+          x=xsum+xdif*aux;
+          y=ysum+ydif*aux;
+          border[i].sdir[q]=funcao_sdir(x,y);
+        }
+      }
+      else {
+        out_borders.push_back(i);
+        nout++;
+      }
     }
-    if(t==1) {
-      /*   elnum=border[i].elemento[0];// incluido em 22/04/2014
-       newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-       el[elnum].set_border_bc(border,newfacenum,1);// incluido em 22/04/2014
-       */
-      out_borders.push_back(i);
-    }
-    /*
-     else if(t==0) { // incluido em 22/04/2014
-     elnum=border[i].elemento[0];// incluido em 22/04/2014
-     newfacenum=border[i].num_local[0];// incluido em 22/04/2014
-     el[elnum].set_border_bc(border,newfacenum,50);// incluido em 22/04/2014
-     } // incluido em 22/04/2014
-     */
   }
   printf("Processou DNBC= %d condicoes de contorno\n",DNBC);
 };

@@ -91,10 +91,13 @@ void DG_Prob::preamble(char * arq_entrada)
   // *************************************************************************
   
   Ler_Arquivo_Dados_DG(arq_par); // formato novo do arquivo de entrada
- 
+  
   Ler_e_Processar_malha(arq_geo);
   
-  //Condicoes_contorno
+  // ****************************
+  // Impor as Condicoes_contorno
+  // ****************************
+  
   // *************************************************
   // Criar vetores globais para tracos de pw e sn    *
   // *************************************************
@@ -109,9 +112,10 @@ void DG_Prob::preamble(char * arq_entrada)
   gbtrsn = new double [count];//trsn;
   
   // ***************************************************
-  // Iniciar os mapas nos elementos                    *
+  // Iniciar os mapas nos elementos;                   *
   // Preencher os mapas de valores internos e externos *
-  // nos contornos dos elementos                       *
+  // nos contornos dos elementos;                      *
+  // Impor as condicoes de contorno                    *
   // ***************************************************  
   for ( int i = 0; i < NBORDER; ++i ) {
     int t  = border[i].tipo;
@@ -134,7 +138,9 @@ void DG_Prob::preamble(char * arq_entrada)
     else // boundary border; vmapM=vmapP 
       el[e0].set_stgbtrbmap(a0,bind0,bind0);
   }
+  Processa_condicoes_contorno();
 }
+
 
 // ****************************************************************************
 void DG_Prob::Ler_Arquivo_Dados_DG(char *arq_par)

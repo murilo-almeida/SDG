@@ -19,7 +19,7 @@ void DG_Prob::DG_eco()
     fprintf(fout1,"Eco do arquivo dos dados\n");
     fprintf(fout1,"******************************************************");
     fprintf(fout1,"**************************\n");  
-    fprintf(fout1,"\nN_FIELDS     = %d\n",N_FIELDS);
+    fprintf(fout1,"\nNumFIELDS     = %d\n",NumFIELDS);
     fprintf(fout1,"P0           = %d\n",(Field[0].P));
 		cout <<"P0           = "<<Field[0].P<<'\n';
 		cout <<"P1           = "<<Field[1].P<<'\n';
@@ -147,7 +147,7 @@ void DG_Prob::DG_eco()
     
      for(int i=0;i<NELEM;++i) {
  			fprintf(fout1,"\n");
-       for(int k=0;k<N_VAR;++k) {
+       for(int k=0;k<NumVAR;++k) {
          int n=el[i].show_ptr_stdel(k)->nn_val();
          int b=el[i].show_ptr_stdel(k)->nb_val();
          int part=el[i].show_part_num();
@@ -182,102 +182,3 @@ void DG_Prob::DG_eco()
   }
 };
 
-/*
-// *************************************************************************
-// Dimensionamento da Matriz para usar Epetra
-// Calcula NumNz, ncount e MapRow
-// Dar problema de memory leak. Usa memoria dinamica.
-// Nao usar !!!!!!!!!!!!
-// *************************************************************************
-void DG_Prob::GetMapDimensions(int * ncount)
-{
-	std::vector < std::vector <int> > MapRow ( NumD, std::vector<int> () );
-  std::vector<int> Row;
- 
-  int nz=1800000; // Ponto critico; nz pequeno pode dar segmentation fault
-	Tstruct T(nz);
-	Vstruct B(NumD);
-	
-	int count =0;
- 
-  DG_MatrizVetor_UMFPACK(Dt0,count,nz,T.i,T.j,T.x,B.v);
-
-  std::vector<int>::iterator it, it0;
-  int ntemp,ntemp0;
-  
-  for ( int i=0; i < NumD; ++i) {
-    NumNz.push_back(0);
-    ncount[i]=0;
-  }
- 
-  for ( int i=0; i < count; i++) {
-    int row = T.i[i];
-    ncount[row]++;
-    Row.push_back(row);
-    MapRow[row].push_back(T.j[i]);
-  }
-  
-  sort ( Row.begin(), Row.end() );
-
-  std::vector<int> tempvec;
-
-  // ordena e remove repeticoes dentro do vetor Row
-  it0 = Row.begin();
-  ntemp0 = (*it0);
-  tempvec.push_back (ntemp0);
-  for(it=it0+1;it != Row.end(); it++) {
-    ntemp = (*it);
-    if(ntemp != ntemp0) {
-      tempvec.push_back (ntemp);
-      ntemp0 = ntemp;
-    }
-  }
-  Row.erase ( Row.begin(),Row.end() );
-  Row.insert ( Row.begin(), tempvec.begin(), tempvec.end() );
-  tempvec.erase ( tempvec.begin(), tempvec.end() ); 
-  
-  for (int i=0;i < NumD; i++) {  
-    sort (MapRow[i].begin(), MapRow[i].end());
-    it0=MapRow[i].end()-ncount[i];
-    ntemp0 = (*it0);
-    tempvec.push_back (ntemp0) ;
-    NumNz[i] = 1;
-    for(it = (it0+1); it != MapRow[i].end(); it++) {
-      ntemp = (*it);
-      if(ntemp != ntemp0) {
-  	tempvec.push_back (ntemp);
-  	ntemp0 = ntemp;
-  	NumNz[i]++;
-      }
-    }
-    MapRow[i].erase (MapRow[i].begin(),MapRow[i].end());
-    MapRow[i].insert (MapRow[i].begin(), tempvec.begin(),tempvec.end());
-    tempvec.erase ( tempvec.begin(),tempvec.end() );
-  }
-	// *********************************
-  // Imprimir no arquivo de eco
-  // *********************************
-  if(myid == 0) {
-    FILE * fout1;
-    fout1=fopen(arq_eco,"ab");
-    vector<int>::iterator it, it0;
-    fprintf(fout1,"\nEco do mapeamento das linhas\n");
-    for (int i=0;i<NumD; i++) {
-      fprintf(fout1," %5d %4d [%4d] : ",i,NumNz[i],ncount[i]);
-      for(it = MapRow[i].begin(); it != MapRow[i].end(); it++)
-      {
-        fprintf(fout1,"%3d ",(*it) );
-      }
-      fprintf(fout1,"\n");
-    }
-    fclose(fout1);
-		
-    fout1=fopen("wGQJ","wb");
-    for(int i=0;i<NELEM; i++){
-      el[i].printwGQJ(fout1);
-			
-    }
-    fclose(fout1);
-  }
-};
-*/

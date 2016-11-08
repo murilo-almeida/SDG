@@ -100,13 +100,12 @@ protected:
 
   // ******************************************
   // Dados das funcoes do problema
-  // N_VAR >= N_FIELDS
-  //int N_FIELDS; // esta em MyOptinos
   int NumD = 0;
   int NumC = 0;
+  const int NumVAR = N_VAR; // Para ser usado nas classes derivadas
+  const int NumFIELDS = N_FIELDS;// Para ser usado nas classes derivadas
   Field_struct Field[N_FIELDS];
-
-  //int N_VAR; // esta em MyOptinos ;
+  
   int FieldOfVar[N_VAR];
 
   // ******************************************
@@ -1312,7 +1311,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Construir_bordas()
 };
 
 // *****************************************************
-// Condicoes de contorno especializada de DG_Prob
+// Marcar as condicoes de contorno no GeProb 
 // *****************************************************
 // ****************************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS>

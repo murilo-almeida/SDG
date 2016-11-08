@@ -3,7 +3,7 @@
 /******************************************************************************/
 /*   Transfere dados do arquivo para restart                                 */
 /******************************************************************************/
-void DG_Prob::Transfere_rst(int * b_in,double * b_do,double * buff)
+void DG_Prob::DG_Transfere_rst(int * b_in,double * b_do,double * buff)
 {
   int count;
   MPI::COMM_WORLD.Bcast(b_in,3,MPI::INT,0);

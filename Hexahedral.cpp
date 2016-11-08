@@ -1586,7 +1586,6 @@ void Hexahedral::Dirichlet(const int face_num,
   PhElem<1> * localphel = new PhElem<1>();
   localphel->set_ptr_stdel(quad,quad);
   localphel->set_type(3);// quadrilatero
-  //localphel->set_NumFields(NFields);// So um campo
   localphel->set_ptvert(vert); // array de vertices recebido nos argumentos
   localphel->set_Vert_map(4,lvert_map);
   //localphel->compute_JV(0);// Jacobiano J deve ser calculado antes do vetor

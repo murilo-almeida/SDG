@@ -139,7 +139,7 @@ void DG_Prob::DG_Iterate()
 						el[i].Atualizar_valores(fout);
 					fprintf(fout,"\n\n");
 					tcount=0.0;
-					Escrever_rst(++nprint);
+					DG_Escrever_rst(++nprint);
 					//printf("numero de impressao = %d\n",++nprint);
 				} //if(myid==0)
       

@@ -14,7 +14,7 @@ enum var_nomes {sat,pres} ; // Esta ordem influencia na leitura dos parametros
 // Esta linha eh importante: MyElem eh usado em varios lugares
 typedef DG_Elem  MyElem;
 
-// GeProb com elemento MyElemen=PhElem<2> = e duas variaveis
+// GeProb com elemento MyElemen=PhElem<2> = e duas variaveis;
 // o segundo 2 abaixo equivale a dois espacos interpolantes
 
 class DG_Prob : public GeProb<MyElem,2,2>
@@ -27,7 +27,7 @@ class DG_Prob : public GeProb<MyElem,2,2>
   void Driver(char * argv = 0);
 
   void DG_alocar_mem_local(const int qmax,const int nsat, const int npres);
-  void liberar_mem_local(const int nsat, const int npres);
+  void DG_liberar_mem_local(const int nsat, const int npres);
   void DG_initial_conditions();
 
   // void DG_eco(std::vector< std::vector <int> > MapRow, int * ncount);
@@ -48,7 +48,7 @@ class DG_Prob : public GeProb<MyElem,2,2>
   void DG_conditionNumber(Epetra_Map Map);
   void Ler_Arquivo_Dados_DG(char *arq_par);
   void MPI_Recebe_Dados_DG();
-  void Transfere_rst(int * b_in,double * b_do,double * buff);
+  void DG_Transfere_rst(int * b_in,double * b_do,double * buff);
   void DG_MatrizVetor_UMFPACK(const double Dt,int & count, const int nz,
                       int * Ti, int * Tj, double * Tx, double * B);
   void DG_MatrizVetor_Epetra(const double Dt,
@@ -96,10 +96,9 @@ class DG_Prob : public GeProb<MyElem,2,2>
                 const int qmax,
                 const double w0[]);
   // ****************************
-  void GetMapDimensions(int *nc);
   //void RowEI(const EDGE border, int * NumNz, int ** Map);
   //void ValoresInterpolados(char * str = 0);
-  void Escrever_rst(const int nprt=0);
+  void DG_Escrever_rst(const int nprt=0);
 	void DG_imprimir_taxas_de_producao(FILE * fout3,
                                            double valor, double valor0, double valor1,
                                            int iter);
@@ -117,8 +116,8 @@ class DG_Prob : public GeProb<MyElem,2,2>
 
  private:
 
-  const int N_VAR = 2;
-  const int N_FIELDS =2;
+  // const int NumVARS = 2  //!< especificados em GeProb<2,2>
+  // const int NumFIELDS = 2 //!< especificados em GeProb<2,2>
   //int P0;//!< ordem dos polinômios da variável 0 (sat)
   //int P1;//!< ordem dos polinômios da variável 1 (pres)
   //int  Q;//!< numero de pontos de Gauss em cada direcao

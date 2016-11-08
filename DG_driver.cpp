@@ -39,8 +39,6 @@ void DG_Prob::Driver(char * str)
 
 
   //int ncount[NumD];// so para testar: ha repeticoes quando ncount[i] > NumNz[i]
-  // muda o tamanho de ColsInRow
-  //GetMapDimensions(ncount);   // Calcula tambem NumNz
 
   // ******************************************************************
   // ********************

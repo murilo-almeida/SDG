@@ -69,6 +69,7 @@ int main(int argc, char* argv[])
     // Ler arquivos de entrada e montar estrutura de dados
     // ****************************************************
     // preamble deve ser especificado em cada problema
+    // ****************************************************
     
     p->My_Prob::preamble(argv[1]);
     

@@ -18,7 +18,7 @@ void DG_Prob::preamble(char * arq_entrada)
   char arq_geo[256]; // arquivo de geometria
   char arq_par[256]; // arquivo de parametros
   
-  // Seq: 01  DG_Prob::DG_preamble
+  // Seq: 01  DG_Prob::preamble
   
   if(myid==0) {
     
@@ -33,7 +33,7 @@ void DG_Prob::preamble(char * arq_entrada)
     // Arquivo de Entrada   *
     // **********************
   
-    // Ler o nome do arquivo de dados da geometria grade
+    // Ler o nome do arquivo de dados da geometria -- grade
     fscanf(finput0,"%s",arq_geo); strcat(arq_geo,"\0");// Linha 1
     cout << "Arquivo de Geometria: "<<arq_geo<< '\n';
     
@@ -51,18 +51,18 @@ void DG_Prob::preamble(char * arq_entrada)
     fscanf(finput0,"%s",arq_eco); strcat(arq_eco,"\0");  // Linha 3
     cout << "Arquivo de Eco: "<<arq_eco<< "\n\n";
     
-    // Ler o numero de espacos interpolantes (N_FIELDS)
-    //fscanf(finput0,"%d %*s",&N_FIELDS);
-    fscanf(finput0,"%*s"); // Ler e descarta a linha contendo "N_FIELDS"; N_FIELDS especificado em MyOptions.h
-    for(int i =0; i<N_FIELDS;++i) {
+    // Ler o numero de espacos interpolantes (NumFIELDS)
+    //fscanf(finput0,"%d %*s",&NumFIELDS);
+    fscanf(finput0,"%*s"); // Ler e descarta a linha contendo "NumFIELDS"; NumFIELDS especificado em GeProb<N_VAR,NumFIELDS>
+    for(int i =0; i<NumFIELDS;++i) {
 			// Ler os dados de cada Field
       fscanf(finput0,"%d %d %d",&Field[i].ordem, &Field[i].P, &Field[i].Q);
     }
     
-    // Ler o numero de variaveis (N_VAR); especificado em MyOptions.h; N_VAR pode ser maior que N_FIELDS;
+    // Ler o numero de variaveis (NumVAR); N_VAR eh especificado em GeProb<N_VAR,NumFIELDS> e pode ser maior que NumFIELDS;
     fscanf(finput0,"%*s");// Ler string e descarta
     
-    for(int i =0; i<N_VAR;++i) {
+    for(int i =0; i<NumVAR;++i) {
       //Ler os dados de cada variavel
       fscanf(finput0,"%d",&FieldOfVar[i]);
     }
@@ -74,13 +74,13 @@ void DG_Prob::preamble(char * arq_entrada)
 #ifdef HAVE_MPI
   Comm->Barrier();
   if(comm_size > 1) {
-    for(int ii=0;ii<N_FIELDS;++ii) {
+    for(int ii=0;ii<NumFIELDS;++ii) {
       MPI::COMM_WORLD.Bcast(&Field[ii].ordem,1,MPI::INT,0);
       MPI::COMM_WORLD.Bcast(&Field[ii].P,1,MPI::INT,0);
       MPI::COMM_WORLD.Bcast(&Field[ii].Q,1,MPI::INT,0);
     }
     
-    for(int ii=0;ii<N_VAR;++ii) {
+    for(int ii=0;ii<NumVAR;++ii) {
       MPI::COMM_WORLD.Bcast(&FieldOfVar[ii],1,MPI::INT,0);
     }
   }

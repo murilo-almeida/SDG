@@ -22,7 +22,7 @@ DG_Prob::~DG_Prob()
 	const int nsat=el[0].show_ptr_stdel(sat)->nn_val();// Num de modos para saturacao
 	const int npres=el[0].show_ptr_stdel(pres)->nn_val();// Num de modos para pressao
 	cout << "Ponto1 nsat ="<< nsat<< " npres = "<< npres << "\n";
-	liberar_mem_local(nsat,npres);
+	DG_liberar_mem_local(nsat,npres);
 
 	for(int i = 0; i < NELEM; i++) {
 		el[i].finaliza_vetores();
@@ -299,7 +299,7 @@ void DG_Prob::DG_initial_conditions()
 #ifdef HAVE_MPI
     //MPI::COMM_WORLD.Barrier();
     Comm->Barrier();
-    Transfere_rst(b_in,b_do,buff);
+    DG_Transfere_rst(b_in,b_do,buff);
 #endif
 
     // atualizar os valores de sna e pwa
@@ -486,7 +486,7 @@ void DG_Prob::DG_alocar_mem_local(const int qmax,
 
 // *****************************************************************
 // *****************************************************************
-void DG_Prob::liberar_mem_local(const int nsat, const int npres)
+void DG_Prob::DG_liberar_mem_local(const int nsat, const int npres)
 {
   if(memoria_alocada) {
 	// *************************
@@ -539,14 +539,14 @@ void DG_Prob::liberar_mem_local(const int nsat, const int npres)
 	//delete [] trphi; trphi=nullptr;
 	delete [] K_g_phi_n;K_g_phi_n=nullptr;
   memoria_alocada = false;
-	cout << "DG_Prob::liberar_mem_local : Sucesso!\n";
+	cout << "DG_Prob::DG_liberar_mem_local : Sucesso!\n";
 }
 };
 
 // ************************************************************************
 // Escrever arquivo restart
 // ************************************************************************
-void DG_Prob::Escrever_rst(const int nprt)
+void DG_Prob::DG_Escrever_rst(const int nprt)
 {
   FILE * frestart;
   char string[256];

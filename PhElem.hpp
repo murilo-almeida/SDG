@@ -138,8 +138,8 @@ public:
   int show_part_num(){return part_num;};
   //double show_Volume(){return Volume;};
   void set_part_num(const int & num = -1);
-  double Phi_val(const int & var, const int & ind, const int & pos)
-  {return ptr_stdel[var]->show_Phi_val(ind,pos);};
+  double Phi_val(const int & var, const int & ind, const int & pos){
+    return ptr_stdel[var]->show_Phi_val(ind,pos);};
   void projetar_C0(FILE *file,double (*func)(double,double,double),
                    const int & ivar);
   void transformacao_direta(double f[],const int & ivar);
@@ -1881,7 +1881,7 @@ template<int NumVariaveis>
 void PhElem<NumVariaveis>::inicia_vetores()
 {
   int nn;//nb,q0,q1;
-  int h,i,j,k;
+  int i,k;//h, j
   
   if(vetores_iniciados != 0) { cout<< "vetores locais de PhElem já iniciados\n"; }
   
@@ -1904,10 +1904,10 @@ void PhElem<NumVariaveis>::inicia_vetores()
     // q0= ptr_stdel[0]->Q_val(0);
     // q1= ptr_stdel[0]->Q_val(1);
     
-    int ndim =  ptr_stdel[0]->ndim_val();
-    int qmax = ptr_stdel[0]->qborder_val();
-    int nborder = ptr_stdel[0]->nborder_val();
-    int NGQP;
+    //int ndim =  ptr_stdel[0]->ndim_val();
+    //int qmax = ptr_stdel[0]->qborder_val();
+    //int nborder = ptr_stdel[0]->nborder_val();
+    //int NGQP;
     //printf("Calculo do Jacobiano: dimensao=%d\n",NGQP);
     //JV = new double [NGQP]; // opcao 2: um unico vetor
     //ptr_stdel[0]->Jacobian(ptvert,Vert_map,JV);

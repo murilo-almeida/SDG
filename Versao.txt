@@ -10,3 +10,6 @@ Em 01/11/2016 alterei a sequencia de leitura e processamento das
 condicoes de contorno. Essas sao lidas marcada em GeProb e o
 processamento e feito em DG_Elem. Retirei a funcao
 PhElem::set_border_bc.
+
+Em 08/11/2016 Ajustes em GeProb e DG_Prob para especificar NumVAR=N_VAR e
+NumFIELDS=N_FIELDS em GeProb e poder usa-los em DG_Prob.

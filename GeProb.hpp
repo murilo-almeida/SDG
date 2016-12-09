@@ -1320,7 +1320,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Marcar_condicoes_contorno(int *BC,
 // ****************************************************************************************
 {
   // Inicializar o bflag com valores 0
-  for(int i=0;i<NG;i++) bflag.push_back(0); //bflag[i]=0;//bflag=0: conhecido
+  for(int i=0;i<NG;++i) bflag.push_back(0); //bflag[i]=0;//bflag=0: conhecido
   
   int naux,tipo,n;
   int elnum,eltype,facenum;//newfacenum;
@@ -1351,7 +1351,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Marcar_condicoes_contorno(int *BC,
       
       el[elnum].set_border_tipo(border,facenum,tipo); //incluido 01/nov/2016
     } // incluido 01/nov/2016
-  } // for(int i=0; i< DNBC; i++) incluido 01/nov/2016
+  } // for(int k=0; k< DNBC; ++k) incluido 01/nov/2016
 };
 // ******************************************************************************************
  

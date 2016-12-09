@@ -10,6 +10,7 @@
 #include "GeProb.hpp"
 
 // Definicao da classe DG_Prob
+// Deriva de GeProb
 DG_Prob::DG_Prob(Epetra_Comm& comm) : GeProb<MyElem,2,2>::GeProb(comm)
 {};
 

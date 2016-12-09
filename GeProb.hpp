@@ -496,7 +496,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
   // ********************************************
   // Designar a particao dos elementos e bordas
   // ********************************************
-  for(int i = 0; i < NELEM; i++) {
+  for(int i = 0; i < NELEM; ++i) {
     el[i].set_part_num();
   }
   // *****************************************************************
@@ -543,7 +543,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
     }
   }
 
-  for(int i=0;i<NumPart;i++) {
+  for(int i=0;i<NumPart;++i) {
     Particao[i].Aloca_memoria();
     //Particao[i].ele.resize(Particao[i].nele);
     //Particao[i].bor.resize(Particao[i].nbor);
@@ -552,16 +552,16 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
 
   int count[NumPart];
 
-  for(int i=0;i<NumPart;i++) count[i]=0;
-  for(int i=0;i<NELEM;i++) {
+  for(int i=0;i<NumPart;++i) count[i]=0;
+  for(int i=0;i<NELEM;++i) {
     int k =el[i].show_part_num();
     Particao[k].ele[count[k]++]=i;
   }
 
-  for(int i=0;i<NumPart;i++) count[i]=0;
+  for(int i=0;i<NumPart;++i) count[i]=0;
   int count1[NumPart];
-  for(int i=0;i<NumPart;i++) count1[i]=0;
-  for(int i=0;i<NBORDER;i++) {
+  for(int i=0;i<NumPart;++i) count1[i]=0;
+  for(int i=0;i<NBORDER;++i) {
     int temp;
     int t=border[i].tipo;
     int k=border[i].part_num;
@@ -578,28 +578,28 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Particionar_malha(const int * buf)
     FILE * fout_par;
     fout_par=fopen("eco_particao","wb");
     fprintf(fout_par,"NumPart %d\n",NumPart);
-    fprintf(fout_par,"Vertices\n");
-    for(int i=0;i<NUMNP;i++)fprintf(fout_par,"%d %d\n",i,V[i].part_num);
-    fprintf(fout_par,"Elementos\n");
-    for(int i=0;i<NELEM;i++)fprintf(fout_par,"%d %d\n",i,el[i].show_part_num());
-    fprintf(fout_par,"Bordas\n");
-    for(int i=0;i<NBORDER;i++)fprintf(fout_par,"%d %d %d\n",i,border[i].tipo,border[i].part_num);
+    fprintf(fout_par,"Vertices\nindice particao\n");
+    for(int i=0;i<NUMNP;++i)fprintf(fout_par,"%d %d\n",i,V[i].part_num);
+    fprintf(fout_par,"Elementos\nindice particao\n");
+    for(int i=0;i<NELEM;++i)fprintf(fout_par,"%d %d\n",i,el[i].show_part_num());
+    fprintf(fout_par,"Bordas\nindice tipo particao\n");
+    for(int i=0;i<NBORDER;++i)fprintf(fout_par,"%d %d %d\n",i,border[i].tipo,border[i].part_num);
 
     // Eco das listas
 
     fprintf(fout_par,"\nLISTAS\n");
-    for(int i=0;i<NumPart;i++) {
+    for(int i=0;i<NumPart;++i) {
       fprintf(fout_par,"Particao %d; nele=%d nbor=%d ngho=%d\n",i,Particao[i].nele,Particao[i].nbor,Particao[i].ngho);
-      fprintf(fout_par,"elementos da particao\n");
-      for(int j=0;j<Particao[i].nele;j++) {
+      fprintf(fout_par,"elementos da particao %d\n",i);
+      for(int j=0;j<Particao[i].nele;++j) {
         fprintf(fout_par,"ele[%d] = %d\n",j, Particao[i].ele[j]);
       }
-      fprintf(fout_par,"elementos ghosts da particao\n");
-      for(int j=0;j<Particao[i].ngho;j++) {
+      fprintf(fout_par,"elementos ghosts da particao %d\n",i);
+      for(int j=0;j<Particao[i].ngho;++j) {
         fprintf(fout_par,"gho[%d] = %d\n",j, Particao[i].gho[j]);
       }
-      fprintf(fout_par,"bordas da particao\n");
-      for(int j=0;j<Particao[i].nbor;j++) {
+      fprintf(fout_par,"bordas da particao %d\n",i);
+      for(int j=0;j<Particao[i].nbor;++j) {
         fprintf(fout_par,"bor[%d] = %d\n",j, Particao[i].bor[j]);
       }
     }

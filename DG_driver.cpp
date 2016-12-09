@@ -46,7 +46,8 @@ void DG_Prob::Driver(char * str)
   // ********************
   // Especifica o algoritmo de resolucao de sistema linear
   TrilinosSolver="Amesos"; // ou "AztecOO"
-
+  cout << "\nUsando TrilinosSolver = "<< TrilinosSolver << "\n";
+  
   //"Amesos_Mumps; // nao existe
   //"Amesos_Superludist";  // nao funciona
   //"Amesos_Superlu; // nao funciona
@@ -54,9 +55,10 @@ void DG_Prob::Driver(char * str)
   //"Amesos_Umfpack" ;
   //"Amesos_Klu"; // lento
   //"Amesos_Lapack";
-
-  AmesosSolverType="Amesos_Lapack";
-  //cout << "Usando Amesos Klu\n";
+  
+  AmesosSolverType="Amesos_Umfpack";
+  if(TrilinosSolver=="Amesos")
+    cout << "Usando AmesosSolverType = "<< AmesosSolverType << "\n\n";
   // Faz iteracao temporal
   // Escolha o algoritmo a ser usado
 

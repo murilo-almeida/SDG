@@ -1,6 +1,7 @@
 //
 //  PhElem.hpp
 //  SDG
+//  Classe base
 //  Elementos fisicos PhElem definido por template
 //  para poder especificar o numero de variaveis no momento
 //  da sua definicao. 
@@ -1433,7 +1434,7 @@ void PhElem<NumVariaveis>::set_part_num(const int & num)
     // ****************************************************
     int temp;
     part_num=ptvert[Vert_map[0]].part_num;
-    for(int i=1;i<numv;i++){
+    for(int i=1;i<numv;++i){
       temp=ptvert[Vert_map[i]].part_num;
       if(part_num > temp) part_num=temp;
     }

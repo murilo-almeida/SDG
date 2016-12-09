@@ -11,8 +11,11 @@ enum var_nomes {sat,pres} ; // Esta ordem influencia na leitura dos parametros
 #include "GeProb.hpp"
 #include "DG_Elem.hpp"
 
+// ************************************************************
 // Esta linha eh importante: MyElem eh usado em varios lugares
 typedef DG_Elem  MyElem;
+// observe que: class DG_Elem : public PhElem<2>
+// ************************************************************
 
 // GeProb com elemento MyElemen=PhElem<2> = e duas variaveis;
 // o segundo 2 abaixo equivale a dois espacos interpolantes

@@ -129,12 +129,11 @@ private:
   
 };
 /*! \class DG_Elem
- * Physical DG_ements
  */
 
 
 // ****************************************************************************
-// Class MyElem ---  Para escoamentos de 2 fluidos imisciveis DG
+// Class DG_Elem ---  Para escoamentos de 2 fluidos imisciveis DG
 // ****************************************************************************
 
 #endif /* DG_Elem_hpp */

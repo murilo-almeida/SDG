@@ -668,6 +668,7 @@ void DG_Prob::Processa_condicoes_contorno()
   // Cria os vetores com as bordas de entrada e saida *
   // ***************************************************
   for (int i=0;i<NBORDER;++i) {
+    
     /*   double epsilon =1.0e-6;// incluido em 22/04/2014
      // ************
      // Similar ao que é feito no fenics

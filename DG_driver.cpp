@@ -45,7 +45,8 @@ void DG_Prob::Driver(char * str)
   // Cerne do problema  *
   // ********************
   // Especifica o algoritmo de resolucao de sistema linear
-  TrilinosSolver="Amesos"; // ou "AztecOO"
+  TrilinosSolver="Amesos";
+  //TrilinosSolver="AztecOO";
   cout << "\nUsando TrilinosSolver = "<< TrilinosSolver << "\n";
   
   //"Amesos_Mumps; // nao existe

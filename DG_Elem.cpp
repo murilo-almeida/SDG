@@ -1174,9 +1174,9 @@ void DG_Elem::VolumeTracos(const double Dt,Fluids fls, double * gbtrsn, double *
 // Epetra_FEVector
 // ****************************************************************************
 void DG_Elem::VolumeIntegrals(const double Dt,Fluids fls,
-                                           Teuchos::RCP<Epetra_FECrsMatrix>  A,
-                                           Teuchos::RCP<Epetra_FEVector> RHS,
-                                           double * gbtrsn, double * gbtrpw)
+                              Teuchos::RCP<Epetra_FECrsMatrix>  A,
+                              Teuchos::RCP<Epetra_FEVector> RHS,
+                              double * gbtrsn, double * gbtrpw)
 {
   //cout<< "DG_VI.cc  DG_Elem::VolumeIntegrals\n";
   //#define indice(n0,var,i) ((n0*var)+i)

@@ -376,11 +376,11 @@ void Quadrilateral::gauss_parameters_default()
   xGQ[2][0]=-1.0;
   wGQ[2][0]=1.0;
   // Valores para as duas dimensoes
-  for(int i=0;i<ndim;i++){
+  for(int i=0;i<ndim;++i){
    
     if(gqt[i]==1)
       {//gqt[i]=1 Gauss-Jacobi
-	Gauss_Jacobi_parameters(Q[i],0.0,0.0,x,wtemp,Dtemp);
+        Gauss_Jacobi_parameters(Q[i],0.0,0.0,x,wtemp,Dtemp);
       }
     
     else if(gqt[i]==2){
@@ -392,14 +392,14 @@ void Quadrilateral::gauss_parameters_default()
       Gauss_Lobatto_Jacobi_parameters(Q[i],0.0,0.0,x,wtemp,Dtemp);
     }
     
-    for(int j=0; j<Q[i]; j++){
+    for(int j=0; j<Q[i]; ++j){
       xGQ[i][j]=x[j];
       wGQ[i][j]=wtemp[j];
     }
     
-    for(int k=0;k<Q[i];k++){
-      for(int l=0;l<Q[i];l++){
-	D[k][l][i]=Dtemp[k][l];
+    for(int k=0;k<Q[i];++k){
+      for(int l=0;l<Q[i];++l){
+        D[k][l][i]=Dtemp[k][l];
 	//printf(" Quadrilateral D[%d][%d][%d] = %g\n", k,l,i,D[k][l][i]);
       }
     }
@@ -1371,10 +1371,6 @@ void Quadrilateral::Gradiente(double * grad[],
   yb=vert[map[1]].y;
   yc=vert[map[2]].y;
   yd=vert[map[3]].y;
-//  za=vert[map[0]].z;
-//  zb=vert[map[1]].z;
-//  zc=vert[map[2]].z;
-//  zd=vert[map[3]].z;
 
   x1 =(-xa+xb+xc-xd)/4.0;
   x12=( xa-xb+xc-xd)/4.0;
@@ -1443,10 +1439,6 @@ void Quadrilateral::Gradiente(FILE * fout, double * grad[],
   double a2p,a2m,a1p,a1m;
   double x1,x2;//x12,y1,y2,y12;
   int m;
- // double df[MAXQ*MAXQ][3];
-  //double a11,a12,a21,a22, J2D;
-  //double b[2][2];
- // double aux0,aux1;
   
   // printf("Calculo do Gradiente de um vetor. Elemento Quadrilateral\n");
   Gradiente(grad,fvec,vert,map);
@@ -1464,14 +1456,6 @@ void Quadrilateral::Gradiente(FILE * fout, double * grad[],
   zb=vert[map[1]].z;
   zc=vert[map[2]].z;
   zd=vert[map[3]].z;
-
-//  x1 =(-xa+xb+xc-xd)/4.0;
-//  x12=( xa-xb+xc-xd)/4.0;
-//  x2 =(-xa-xb+xc+xd)/4.0;
-
-//  y1 =(-ya+yb+yc-yd)/4.0;
-//  y12=( ya-yb+yc-yd)/4.0;
-//  y2 =(-ya-yb+yc+yd)/4.0;
 
   // Cheque do gradiente
   

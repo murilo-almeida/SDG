@@ -1379,10 +1379,6 @@ void Hexahedral::Gradiente(double * grad[],
   yb=vert[map[1]].y;
   yc=vert[map[2]].y;
   yd=vert[map[3]].y;
-//  za=vert[map[0]].z;
-//  zb=vert[map[1]].z;
-//  zc=vert[map[2]].z;
-//  zd=vert[map[3]].z;
 
   x1 =(-xa+xb+xc-xd)/4.0;
   x12=( xa-xb+xc-xd)/4.0;
@@ -1473,13 +1469,6 @@ void Hexahedral::Gradiente(FILE * fout, double * grad[],
   zc=vert[map[2]].z;
   zd=vert[map[3]].z;
 
-//  x1 =(-xa+xb+xc-xd)/4.0;
-//  x12=( xa-xb+xc-xd)/4.0;
-//  x2 =(-xa-xb+xc+xd)/4.0;
-
-//  y1 =(-ya+yb+yc-yd)/4.0;
-//  y12=( ya-yb+yc-yd)/4.0;
-//  y2 =(-ya-yb+yc+yd)/4.0;
 
   // Cheque do gradiente
   
@@ -1521,10 +1510,7 @@ void Hexahedral::Gradiente(FILE * fout, double * grad[],
   yb=vert[map[1]].y;
   yc=vert[map[2]].y;
   yd=vert[map[3]].y;
-//  za=vert[map[0]].z;
-//  zb=vert[map[1]].z;
-//  zc=vert[map[2]].z;
-//  zd=vert[map[3]].z;
+
   // calculo do vetor contendo a funcao nos pontos de integracao de Gauss
   for(j=0;j<Q[1];j++){
     eta2=xGQ[1][j];

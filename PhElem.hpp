@@ -214,30 +214,6 @@ protected:
                       *  trace array of the external trace of the border */
   int vetores_iniciados; // = 1; indica que os vetores locais foram iniciados e necessitam ser finalizados
   
-  // Variaveis especificas para o caso DG_Problem
-  // double * sna, * pwa; //!< ponteiros para os valores nos pontos de Gauss da saturacao e pressao atuais
-  // double rho; //!< densidade de massa ou porosidade
-  // double porosidade;
-  // double perm[3]; //!< permeabilidades nas 3 direcoes
-  // double qn,qw;
-  // double Volume; //!< Volume do elemento ( = area do elemento para elementos bidimensionais e comprimento para elem. 1D
-  
-  // double     * Jb; //!< Jacobiano nos pontos de Gauss sobre as bordas; usado na integração sobre bordas
-  // double    ** Mass_sn;
-  // double    ** Trsn;
-  // double    ** Trpw;
-  // double   *** LaplacianoPhi;
-  // double   *** TrKgrad_sn;
-  // double   *** TrKgrad_pw;
-  // double   *** TrKgrad_pc;
-  // double  **** TrPhi;
-  // double  **** GradPhi;
-  // double  **** TrKgradPhi_n;
-  // double ***** TrGradPhi;
-  // double     * PhiArray;
-  
-  //double ** b;
-  
 };
 /*! \class PhElem
  * Physical Elements

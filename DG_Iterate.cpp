@@ -13,6 +13,8 @@ void DG_Prob::DG_Iterate()
 {
   
   Epetra_Map Map(NumD,0,*Comm);
+  //Teuchos::RCP<Epetra_FECrsMatrix> A = Teuchos::rcp (new Epetra_FECrsMatrix (Copy, Map, 5));//(Copy,Map,0);//&NNz[0]);
+  //Teuchos::RCP<Epetra_FEVector> RHS = Teuchos::rcp(new Epetra_FEVector(Map,1));
   
   tnc=0;
   // *****************************************
@@ -35,34 +37,11 @@ void DG_Prob::DG_Iterate()
   // Construcao alternativa do Mapa  
   // Programa distribui as variaveis automaticamente
   cout << "DG_Iterate: NumD = "<< NumD << endl;
- 
-	
-  //A = new Epetra_FECrsMatrix(View,Map,0);
-  //RHS = new Epetra_FEVector(Map,1);
-  Teuchos::RCP<Epetra_FECrsMatrix> A = Teuchos::rcp(new Epetra_FECrsMatrix(View,Map,5));
-  Teuchos::RCP<Epetra_FEVector> RHS = Teuchos::rcp(new Epetra_FEVector(Map,1));
-  (A.get())->PutScalar(0.0);
-  (RHS.get())->PutScalar(0.0);
-  
-  
-  // PROBLEMA PARECE ESTAR AQUI !!!!!!!!!!!!!!!!!!!!
-	/* 
-	 int NumMyGlobalVars = Map.NumMyElements();
-	 int NNz[NumMyGlobalVars];
-	 int MyGlobalVars[NumMyGlobalVars];
-	 Map.MyGlobalElements(&MyGlobalVars[0]);
-  
-	 for ( int i=0; i < NumMyGlobalVars; ++i ) {
-		NNz[i] = NumNz[ MyGlobalVars[i] ];
-			printf("NNz[%2d]= %d\n",i,NNz[i]);
-	 }
-	*/
-	
 
   printf("Iterate ponto 1\n"); 
   
   double tcount=0.0;
-  double_t norm_delta_X;
+  double_t norm_delta_X=0.0;
   double valor, valor0, valor1;
   int iter,cut;
   int nprint=0;
@@ -105,9 +84,9 @@ void DG_Prob::DG_Iterate()
 			
 			case 0: // primeiro ponto
 				
-				Ge_MVRA0(Dt,Map,valor0,norm_delta_X);
+        Ge_MVRA0(Dt,Map,valor0,norm_delta_X);
 				iter = 1;
-				Ge_MVRA(Dt,Map,valor,token,norm_delta_X);
+        Ge_MVRA(Dt,Map,valor,token,norm_delta_X);
 				valor1 = valor;
         if(cut==0 && myid==0) {
           cout<< "Inicio do Passo de tempo = "<< passo << endl;;
@@ -119,7 +98,7 @@ void DG_Prob::DG_Iterate()
         break;
 			
 			case 1: // Iteracao de Newton
-				Ge_MVRA(Dt,Map,valor,token,norm_delta_X);
+        Ge_MVRA(Dt,Map,valor,token,norm_delta_X);
 				++iter;
 #ifdef saida_detalhada
 				cout << "DG_Iterate: case 1: iteracao = "<< iter<< " valor (residual) = "<< valor << endl;

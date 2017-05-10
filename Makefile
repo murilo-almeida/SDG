@@ -1,19 +1,18 @@
 # Get Trilinos as one entity
 
-include /opt/local/Trilinos-12.9/include/Makefile.export.Trilinos
+include /opt/local/Trilinos/include/Makefile.export.Trilinos
 
-##include /opt/local/include/Trilinos/Makefile.export.Trilinos
 
 INCP	= -I/opt/local/include/newmat
 LSPECTRAL	= -L/opt/local/lib -lnewmat
-MY_RPATH = $(subst -L, ,$(Trilinos_LIBRARY_DIRS))
+MY_RPATH = -rpath $(subst -L, ,$(Trilinos_LIBRARY_DIRS))
 
 # Make sure to use same compilers and flags as Trilinos
 CXX=$(Trilinos_CXX_COMPILER)
 CC=$(Trilinos_C_COMPILER)
 FORT=$(Trilinos_Fortran_COMPILER)
 
-CXX_FLAGS=$(Trilinos_CXX_COMPILER_FLAGS) $(USER_CXX_FLAGS) -std=c++11
+CXX_FLAGS=$(Trilinos_CXX_COMPILER_FLAGS) $(USER_CXX_FLAGS)
 #-Wc++11-extensions
 C_FLAGS=$(Trilinos_C_COMPILER_FLAGS) $(USERC_FLAGS)
 FORT_FLAGS=$(Trilinos_Fortran_COMPILER_FLAGS) $(USER_FORT_FLAGS)
@@ -60,8 +59,7 @@ HEADERS =	DG_EI_Header.h\
 		Tetrahedral.h\
 		Triangle.h\
 		Tstruct.h\
-		spectral.h\
-		virtual.H
+		spectral.h
 SOURCES =	AMPFunctionsA.cpp\
 		ASPFunctions.cpp\
 		DG.cpp\
@@ -80,7 +78,6 @@ SOURCES =	AMPFunctionsA.cpp\
 		DG_MVRA.cpp\
 		DG_Prob.cpp\
 		DG_Elem.cpp \
-		DG_RowMap.cpp\
 		DG_driver.cpp\
 		DG_eco.cpp\
 		DG_preamble.cpp\
@@ -116,7 +113,6 @@ OBJECTS =	AMPFunctionsA.o\
 		DG_MVRA.o\
 		DG_Prob.o\
 		DG_Elem.o \
-		DG_RowMap.o\
 		DG_driver.o\
 		DG_eco.o\
 		DG_preamble.o\
@@ -160,14 +156,17 @@ all: $(DESTDIR)$(TARGET)
 ####### Linking
 
 $(DESTDIR)$(TARGET): main.o $(OBJECTS) 
-	$(CLINKER)    -o $(TARGET) main.o $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
-	install_name_tool -add_rpath $(MY_RPATH) main
+	$(CLINKER)    -o $(TARGET) main.o $(MY_RPATH) $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
+
+
+## A linha abaixo usa install_name_tool para adicionar o rpath ao executavel main	
+#install_name_tool -add_rpath $(MY_RPATH) main
 
 interpolar: ValoresInterpolados.o $(OBJECTS)
-	    $(CLINKER)    -o interpolar ValoresInterpolados.o $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
+	    $(CLINKER)    -o interpolar ValoresInterpolados.o $(MY_RPATH) $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
 
 teste_ordenar: teste_ordenar.o $(OBJECTS)
-	    $(CLINKER)    -o teste_ordenar teste_ordenar.o $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
+	    $(CLINKER)    -o teste_ordenar teste_ordenar.o $(MY_RPATH) $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
 
 
 .PHONY: clean

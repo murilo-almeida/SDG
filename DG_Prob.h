@@ -17,7 +17,7 @@ typedef DG_Elem  MyElem;
 // observe que: class DG_Elem : public PhElem<2>
 // ************************************************************
 
-// GeProb com elemento MyElemen=PhElem<2> = e duas variaveis;
+// GeProb com elemento MyElem=PhElem<2> = e duas variaveis;
 // o segundo 2 abaixo equivale a dois espacos interpolantes
 
 class DG_Prob : public GeProb<MyElem,2,2>

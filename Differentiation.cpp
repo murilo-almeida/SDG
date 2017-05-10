@@ -1,6 +1,6 @@
 
-/*! \file ADifferentiation.cc
-  \brief  ADifferentiation.cc documentação
+/*! \file ADifferentiation.cpp
+  \brief  ADifferentiation.cpp documentação
 
   Este arquivo contém as rotinas para diferenciação 
   numérica, pelo método de Colocação de Gauss-Jacobi.

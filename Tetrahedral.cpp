@@ -270,12 +270,12 @@ void Tetrahedral::gauss_parameters_default()
 
    // Primeira coordenada
    Gauss_Lobatto_Jacobi_parameters(Q[0],0.0,0.0,x,wtemp,Dtemp);
-   for(int j=0; j<Q[0]; j++){
+   for(int j=0; j<Q[0]; ++j){
      xGQ[0][j]=x[j];
      wGQ[0][j]=wtemp[j];
    }
-   for(int k=0;k<Q[0];k++)
-     for(int l=0;l<Q[0];l++){
+   for(int k=0;k<Q[0];++k)
+     for(int l=0;l<Q[0];++l){
        D[k][l][0]=Dtemp[k][l];
      }   
    // Segunda coordenada
@@ -283,14 +283,14 @@ void Tetrahedral::gauss_parameters_default()
    // alpha=1.0, beta=0.0            \/ \/\/\/\/***************************
    Gauss_Radau_Jacobi_parameters(Q[1],1.0,0.0,x,wtemp,Dtemp);
    // ********************************^^^^^^^^^****************************
-   for(int j=0; j<Q[1]; j++){
+   for(int j=0; j<Q[1]; ++j){
      xGQ[1][j]=x[j];
      // *****\/\/\/\/\/\/**************************************************
      wGQ[1][j]=wtemp[j]/2.0;
      // *****^^^^^^^^^^^^**************************************************
    }
-   for(int k=0;k<Q[1];k++)
-     for(int l=0;l<Q[1];l++){
+   for(int k=0;k<Q[1];++k)
+     for(int l=0;l<Q[1];++l){
        D[k][l][1]=Dtemp[k][l];
      }
    // Terceira coordenada
@@ -298,14 +298,14 @@ void Tetrahedral::gauss_parameters_default()
    // alpha=2.0, beta=0.0            *\/ \/\/\/\/**************************
    Gauss_Radau_Jacobi_parameters(Q[2],2.0,0.0,x,wtemp,Dtemp);
    // ********************************^^^^^^^^^****************************
-   for(int j=0; j<Q[2]; j++){
+   for(int j=0; j<Q[2]; ++j){
      xGQ[2][j]=x[j];
      // *****\/\/\/\/\/\/**************************************************
      wGQ[2][j]=wtemp[j]/4.0;
      // *****^^^^^^^^^^^^**************************************************
    }
-   for(int k=0;k<Q[2];k++)
-     for(int l=0;l<Q[2];l++){
+   for(int k=0;k<Q[2];++k)
+     for(int l=0;l<Q[2];++l){
        D[k][l][2]=Dtemp[k][l];
      } 
 };
@@ -1438,7 +1438,7 @@ void Tetrahedral::Gradiente(FILE * fout, double ** grad,
 	for(i=0;i<3;i++){
 	  aux=0;
 	  for(j=0;j<3;j++){
-	    aux+=df[m][j]*b[j][i];
+	    aux+=b[j][i]*df[m][j];
 	  }
 	  grad[i][m]=aux;
 	}
@@ -1477,10 +1477,10 @@ void Tetrahedral::Gradiente(double ** grad,
 			    const int map[])
 {
   double xa,ya,za,xb,yb,zb,xc,yc,zc,xd,yd,zd,eta1,eta2,eta3;
- // double e3p, e3m,e2p,e2m,e1p,e1m,x1,x2,x3;
+ 
   int i,j,l,m;
   double df[MAXQ*MAXQ*MAXQ][3];
-  // double gvec[MAXQ*MAXQ*MAXQ];
+  
   double a11,a12,a13,a21,a22,a23,a31,a32,a33, J3D;
   double b[3][3];
   double aux,aux0,aux1,aux2;
@@ -1564,7 +1564,7 @@ void Tetrahedral::Gradiente(double ** grad,
 	for(i=0;i<3;i++){
 	  aux=0;
 	  for(j=0;j<3;j++){
-	    aux+=df[m][j]*b[j][i];
+	    aux+=b[j][i]*df[m][j];
 	  }
 	  grad[i][m]=aux;
 	}
@@ -1588,7 +1588,6 @@ void Tetrahedral::Gradiente(FILE * fout,
   double e3p, e3m,e2p,e2m,e1p,e1m;
   int i,j,k,m;
   double fvec[MAXQ*MAXQ*MAXQ];
-  // double gvec[MAXQ*MAXQ*MAXQ];
   
   // coordenadas dos nos
   xa=vert[map[0]].x;
@@ -1660,7 +1659,7 @@ void Tetrahedral::localFaceModeMap(const int fnum,
   }
   
   int l=0;
- // int flag=0;// marcar nos como conhecido
+ 
   // Flag dos nos
   for(int i=0;i<3;++i) {
     trimap[l++] = face[fnum][i];

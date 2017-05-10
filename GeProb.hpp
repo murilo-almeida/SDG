@@ -844,6 +844,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::ResolverComTrilinos(const std::string Pack
     el[i].Avancar_u0(&X0[0]);
   //delete [] X0; X0=nullptr;
 };
+
 // ***************************************************************************
 // ***************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS>

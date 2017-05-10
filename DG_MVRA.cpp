@@ -6,9 +6,9 @@
 void DG_Prob::Ge_MVRA0(const double Dt,
                        Epetra_Map Map,
                        double & valor,
-											 double_t & norm_delta_X)
+											 double_t & norm_delta_X
+                       )
 {
-  //MPI::COMM_WORLD.Barrier();
   Comm->Barrier();
   Teuchos::RCP<Epetra_FECrsMatrix> A = Teuchos::rcp(new Epetra_FECrsMatrix(Copy,Map,5));
   Teuchos::RCP<Epetra_FEVector> RHS = Teuchos::rcp(new Epetra_FEVector(Map,1));
@@ -17,7 +17,7 @@ void DG_Prob::Ge_MVRA0(const double Dt,
   DG_MatrizVetor_Epetra(Dt,A,RHS);
 	
   double valor_temp;
-  RHS->NormInf( &valor_temp );//RHS.NormInf( &valor_temp );// ou Norm2(
+  RHS->Norm2( &valor_temp );//RHS.NormInf( &valor_temp );// ou Norm2(
   valor = valor_temp;
   //cout << "Ge_MVRA0: valor_temp = "<< valor_temp << endl; 
   if(std::isnan(valor_temp)) cout << "Ge_MVRA0  Float was Not a Number: valor_temp " << valor_temp << endl;
@@ -29,10 +29,16 @@ void DG_Prob::Ge_MVRA(const double Dt,
                       Epetra_Map Map,
                       double & valor,
                       int & token,
-											double_t & norm_delta_X)
+											double_t & norm_delta_X
+                      )
 {
-  //MPI::COMM_WORLD.Barrier();
   Comm->Barrier();
+  // *********************************************************************************************
+  // Precisamos criar a matrix A e o vetor RHS aqui porque em DG_MatrizVetor_Epetra
+  // A e RHS vao ser preeenchidos
+  // e terminadas suas construcoes com RHS->GlobalAssemble(Add) e A->FillComplete()
+  // *********************************************************************************************
+
   Teuchos::RCP<Epetra_FECrsMatrix> A = Teuchos::rcp (new Epetra_FECrsMatrix (Copy, Map, 5));//(Copy,Map,0);//&NNz[0]);
   Teuchos::RCP<Epetra_FEVector> RHS = Teuchos::rcp(new Epetra_FEVector(Map,1));
   A->PutScalar(0.0);
@@ -180,45 +186,3 @@ void DG_Prob::DG_conditionNumber(Epetra_Map Map)
   }
   fclose(fou0);
 };
-
-/*
-bool DG_Prob::evaluate(FillType f,
-                       const Epetra_Vector* soln,
-                       Epetra_Vector* tmp_rhs,
-                       Epetra_RowMatrix* tmp_matrix)
-{
-  double X_[NumD];
-  soln->ExtractCopy(X_);
-  for(int i=0;i<NumD;++i) printf("X_[%d] = %g\n",i,X_[i]);
-  for ( int k = 0; k < NELEM; ++k) {
-    el[k].Atualizar_u0(&X_[0]);
-  }
-  //Teuchos::RCP<Epetra_FECrsMatrix> AA = Teuchos::rcp (new Epetra_FECrsMatrix (Copy, *StandardMap, 5));//(Copy,Map,0);//&NNz[0]);
-  //Teuchos::RCP<Epetra_FEVector> rhs = Teuchos::rcp(new Epetra_FEVector(*StandardMap,1));
-  //AA->PutScalar(0.0);
-  //rhs->PutScalar(0.0);
-  double Dt=0.1;
-  //DG_MatrizVetor_Epetra(Dt,AA,rhs);
-  
-  NumMyElements = StandardMap->NumMyElements();
-  int NumMyGlobalID[NumMyElements];
-  
-  
-  if(f==F_ONLY || f==ALL) {
-      for(int i=0;i< NumMyElements; ++i){
-      int ind = NumMyGlobalID[i];
-        (tmp_rhs->Values())[ind] = 1.0*ind;//((rhs.get())->Values())[ind];
-     }
-    
-  }
-  if(f == MATRIX_ONLY  || f==ALL) {
-      //tmp_matrix = dynamic_cast<Epetra_RowMatrix*> (AA.get());
-  }
-    
-      // *tmp_matrix = *dynamic_cast<Epetra_RowMatrix*> (AA.get());
-      // *tmp_rhs = *dynamic_cast<Epetra_Vector*> (rhs.get());
-  return true;
-};
-
-*/
-

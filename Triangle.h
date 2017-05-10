@@ -18,7 +18,7 @@ class Triangle : public Stdel
   //void make_Phi(const int m,double Phi[]);
   void make_local_matrices();
   void make_gbnmap(int n0,int n1,int n2,int ng0,int ng1,int ng2,
-		  int sign0,int sign1,int sign2,int map[],int sgn[] );
+                   int sign0,int sign1,int sign2,int map[],int sgn[] );
  
  	  
   // Virtual functions

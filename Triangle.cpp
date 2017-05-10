@@ -1233,7 +1233,7 @@ void Triangle::Gradiente(double * grad[],
       for(i=0;i<2;i++){
         aux=0;
         for(j=0;j<2;j++){
-          aux+=df[m][j]*b[j][i];
+          aux+=b[j][i]*df[m][j];
         }
         grad[i][m]=aux;
       }
@@ -1284,12 +1284,12 @@ void Triangle::Gradiente(FILE * fout, double * grad[],
   b[1][1]=a11/J2D;
   
   // calculo das derivadas com relacao a eta1 e eta2
-  for(int q=0;q<Q[1];q++){
-    for(int p=0;p<Q[0];p++){
+  for(int q=0;q<Q[1];++q){
+    for(int p=0;p<Q[0];++p){
       m=p+q*Q[0];
       aux0=0.0;
       aux1=0.0;
-      for(l=0;l<Q[0];l++){
+      for(l=0;l<Q[0];++l){
         aux0+=D[p][l][0]*fvec[(l+q*Q[0])];
         aux1+=D[q][l][1]*fvec[(p+l*Q[0])];
       }
@@ -1299,9 +1299,9 @@ void Triangle::Gradiente(FILE * fout, double * grad[],
   }
   
   // calculo das derivadas com relacao a xi1, xi2
-  for(int q=0;q<Q[1];q++){
+  for(int q=0;q<Q[1];++q){
     eta2=xGQ[1][q];
-    for(int p=0;p<Q[0];p++){
+    for(int p=0;p<Q[0];++p){
       eta1=xGQ[0][p];
       m=p+q*Q[0];
       aux=(1-eta2);
@@ -1318,7 +1318,7 @@ void Triangle::Gradiente(FILE * fout, double * grad[],
       for(i=0;i<2;i++){
         aux=0;
         for(j=0;j<2;j++){
-          aux+=df[m][j]*b[j][i];
+          aux+=b[j][i]*df[m][j];
         }
         grad[i][m]=aux;
       }
@@ -1326,11 +1326,11 @@ void Triangle::Gradiente(FILE * fout, double * grad[],
   }
   
   // Cheque do gradiente
-  for(j=0;j<Q[1];j++){
+  for(j=0;j<Q[1];++j){
     eta2=xGQ[1][j];
     e2p=(1.0+eta2)/2.0;
     e2m=(1.0-eta2)/2.0;
-    for(i=0;i<Q[0];i++){
+    for(i=0;i<Q[0];++i){
       eta1=xGQ[0][i];
       e1p=(1.0+eta1)/2.0;
       e1m=(1.0-eta1)/2.0;

@@ -145,13 +145,12 @@ protected:
 	std::vector<PARTICAO> Particao;
 
   // ******************************************
-
   Linear * ptrLinear[N_FIELDS];
   Triangle * ptrTriang[N_FIELDS];
   Quadrilateral * ptrQuadri[N_FIELDS];
   Tetrahedral * ptrTetrahedral[N_FIELDS];
   Hexahedral *  ptrHexahedral[N_FIELDS];
-
+  
   // ******************************************
   // Para usar Trilinos
 
@@ -197,10 +196,12 @@ GeProb<ElemType,N_VAR,N_FIELDS>::~GeProb()
      cout << "liberou border"<< endl;
   }
 
-  for(int i=0;i<N_FIELDS;++i){
+ for(int i=0;i<N_FIELDS;++i){
     delete ptrLinear[i];
     delete ptrTriang[i];
     delete ptrQuadri[i];
+    delete ptrTetrahedral[i];
+    delete ptrHexahedral[i];
   }
 };
 // ****************************************************************************
@@ -319,12 +320,12 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
 
   // inicializa os elementos padrões
   //int n = N_FIELDS;//Field.size();
-
+  
   for(int i=0; i < N_FIELDS; ++i) {
     //	cout << "DG_Prob::set_orders:  "<< i << '\n';
     // cout << "Aloca memoria dinamica\n ";
-    ptrLinear[i] = new  Linear(Field[i].P,Field[i].Q);// type =1
-    ptrTriang[i] = new  Triangle(Field[i].P,Field[i].Q);// type =2
+    ptrLinear[i] = new Linear(Field[i].P,Field[i].Q);// type =1
+    ptrTriang[i] = new Triangle(Field[i].P,Field[i].Q);// type =2
     ptrQuadri[i] = new  Quadrilateral(Field[i].P,Field[i].Q);// type =3
     ptrTetrahedral[i] = new  Tetrahedral(Field[i].P,Field[i].Q);// type =4
     ptrHexahedral[i] =  new  Hexahedral(Field[i].P,Field[i].Q);// type =5
@@ -374,7 +375,6 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
     // Processamento do elemento
     el[i].Processar_dados(NL,Aresta,NF,Face);
   }
-
   // *******************************************
   // NG=Numero de nos vezes numero de variveis *
   // NG=ng*N_VAR;

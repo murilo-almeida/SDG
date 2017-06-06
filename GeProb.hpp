@@ -3,15 +3,6 @@
 
 #include "Funcoes_c.h"
 
-// Forward Declarations
-
-// class Epetra_Comm;
-// class Epetra_Map;
-// class Epetra_Vector;
-// class Epetra_Import;
-// class Epetra_CrsGraph;
-// class Epetra_CrsMatrix;
-
 // ****************************************************************************
 // Classe GeProb (Generic Problem)
 // Encapsula os dados para montar e resolver o problema algebrico generico
@@ -342,23 +333,23 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
     switch(type_num){
 
       case 1:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrLinear[FieldOfVar[j]];
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Linear *>(ptrLinear[FieldOfVar[j]]);
       break;
 
       case 2:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrTriang[FieldOfVar[j]];
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Triangle *>(ptrTriang[FieldOfVar[j]]);
       break;
 
       case 3:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrQuadri[FieldOfVar[j]];
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Quadrilateral *>(ptrQuadri[FieldOfVar[j]]);
       break;
 
     case 4:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrTetrahedral[FieldOfVar[j]];
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Tetrahedral *>(ptrTetrahedral[FieldOfVar[j]]);
       break;
 
       case 5:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrHexahedral[FieldOfVar[j]];
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Hexahedral *>(ptrHexahedral[FieldOfVar[j]]);
         break;
 
       default:
@@ -367,9 +358,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
     }
 
     el[i].set_ptr_stdel(ptstdel);
-    // formas alternativas
-    //el[i].set_ptr_stdel(ptstdel[0],ptstdel[1]);
-    //for(int j=0;j<N_VAR;++j) el[i].set_ptr_stdel_var(j,ptstdel[j]);
+    
     // ***********************************************************
 
     // Processamento do elemento
@@ -773,16 +762,6 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::ResolverComTrilinos(const std::string Pack
     Solver->NumericFactorization();
     Solver->Solve();
     delete Solver; Solver=nullptr;
-
-    /*  // inutil quando usando  assert(IsAvailable);
-        if { !IsAvailable) {
-        std::cerr << "Specified solver (" << AmesosSolverType << ") is not available" << std::endl;
-        #ifdef HAVE_MPI
-        MPI::Finalize();
-        #endif
-        exit(0);
-        }
-    */
 
     // **************************************
     // Fim da Resolucao Amesos

@@ -378,7 +378,7 @@ void Triangle::gauss_parameters_default()
 // ****************************************************************************
 // OBSERVACAO: MULTIPLICAR POR JV
 // ****************************************************************************
-void Triangle::inner_product_vector(double vec[],
+void Triangle::vector_of_integral_of_f_Phi_dv(double vec[],
 				    double (*func)(double, double, double), 
 				    const Vertice vert[], const int map[],
 				    const double JV[])
@@ -447,7 +447,7 @@ void Triangle::inner_product_vector(double vec[],
   //for(n=0;n<nn;n++)vec[n]*=JV[0];// <------Multiplicar pelo Jacobiano----<
 };
 // ****************************************************************************
-void Triangle::inner_product_vector(double vec[],
+void Triangle::vector_of_integral_of_f_Phi_dv(double vec[],
 				    const double func[],
 				    const double JV[])
 {

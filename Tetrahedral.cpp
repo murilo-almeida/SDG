@@ -311,7 +311,7 @@ void Tetrahedral::gauss_parameters_default()
 };
 // ************************************************************************
 // ************************************************************************
-void Tetrahedral::inner_product_vector(double vec[],
+void Tetrahedral::vector_of_integral_of_f_Phi_dv(double vec[],
 				       double (*func)(double,double,double), 
 				       const Vertice vert[], const int map[],
 				       const double JV[])
@@ -1842,7 +1842,7 @@ void Tetrahedral::make_mass_matrices(int NFields)
   */
 };
 
-void Tetrahedral::inner_product_vector(double vec[],
+void Tetrahedral::vector_of_integral_of_f_Phi_dv(double vec[],
                                     const double func[],
                                     const double JV[])
 {

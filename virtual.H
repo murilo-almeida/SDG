@@ -69,11 +69,11 @@ virtual void trace(const int lado,const int Q,const int sinal,
 virtual void computeFuncGQ(double f_[], 
 			   const Vertice vert[], const int map[],
 			   double (*func)(double,double,double));
-virtual void inner_product_vector(double vec[],
+virtual void vector_of_integral_of_f_Phi_dv(double vec[],
 				  const double func[],
 				 // const Vertice vert[],const int map[],
 				  const double JV[]);
-virtual void inner_product_vector(double vec[],
+virtual void vector_of_integral_of_f_Phi_dv(double vec[],
 				  double (*func)(double, double, double),
 				  const Vertice vert[], const int map[],
 				  const double JV[]);

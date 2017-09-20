@@ -409,12 +409,12 @@ void Quadrilateral::gauss_parameters_default()
 // ****************************************************************************
 //
 // ****************************************************************************
-void Quadrilateral::inner_product_vector(double vec[],
+void Quadrilateral::vector_of_integral_of_f_Phi_dv(double vec[],
 					 double (*func)(double,double,double),
 					 const Vertice vert[],const int map[],
 					 const double JV[])
 {
-	//printf("Quadrilateral::inner_product_vector\n");
+	//printf("Quadrilateral::vector_of_integral_of_f_Phi_dv\n");
   int n,p,q;
   int j, i;
   double aux,eta1,eta2,x1,x2,x3;
@@ -474,12 +474,12 @@ void Quadrilateral::inner_product_vector(double vec[],
 // ****************************************************************************
 //
 // ****************************************************************************
-void Quadrilateral::inner_product_vector(double vec[],
+void Quadrilateral::vector_of_integral_of_f_Phi_dv(double vec[],
 					 const double func[],
 					// const Vertice vert[],const int map[],
 					 const double JV[])
 {
-	//printf("Quadrilateral::inner_product_vector(func[])\n");
+	//printf("Quadrilateral::vector_of_integral_of_f_Phi_dv(func[])\n");
   int n,p,q;
   int j, i;
   double aux,eta1,eta2;//x1,x2,x3;

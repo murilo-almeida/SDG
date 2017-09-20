@@ -289,7 +289,7 @@ void Linear::gauss_parameters_default()  // 10/02/2013
 // ****************************************************************************
 // OBSERVACAO: MULTIPLICAR POR JV
 // ****************************************************************************
-void Linear::inner_product_vector(double vec[],
+void Linear::vector_of_integral_of_f_Phi_dv(double vec[],
 				    double (*func)(double, double, double), 
 				    const Vertice vert[], const int map[],
 				    const double JV[])  // 10/02/2013
@@ -321,7 +321,7 @@ void Linear::inner_product_vector(double vec[],
   }
 };
 // ****************************************************************************
-void Linear::inner_product_vector(double vec[],
+void Linear::vector_of_integral_of_f_Phi_dv(double vec[],
 				    const double func[],
 				  //  const Vertice vert[],const int map[],
 				    const double JV[])  // 10/02/2013

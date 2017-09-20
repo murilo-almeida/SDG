@@ -946,7 +946,7 @@ void PhElem<NumVariaveis>::projetar_C0(FILE *file,
       for(k=0;k<NGQP;k++) {f[k] -= (aux*phi[k]);}
     }
     double b[nn];
-    ptr_stdel[ivar]->inner_product_vector(b,f,JV);
+    ptr_stdel[ivar]->vector_of_integral_of_f_Phi_dv(b,f,JV);
     //fprintf(file,"%5d\n",ni);
     for(i=0;i<ni;i++){
       B.element(i)=b[i+nb];
@@ -1001,7 +1001,7 @@ void PhElem<NumVariaveis>::transformacao_direta(double f[],const int & ivar)
   }
   
   double b[nn];
-  ptr_stdel[ivar]->inner_product_vector(b,f,JV);
+  ptr_stdel[ivar]->vector_of_integral_of_f_Phi_dv(b,f,JV);
   for(i=0;i<nn;i++){
     B.element(i)=b[i];
   }

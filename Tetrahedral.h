@@ -57,10 +57,13 @@ class Tetrahedral : public Stdel
     {1,3}, // BD = 4
     {2,3}  // CD = 5 // aresta colapsada : sempre a ultima
   };
-  // direcoes nas arestas
+  // direcoes nas arestas: dir0
   const int ad0[6] = {0,1,2,1,2,2}; // ad0  = ver[1] - 1;
-  const int av1[6] = {0,0,0,0,1,0}; // implicito que dir1 = (dir0 + 1) % 3
-  const int av2[6] = {0,0,0,1,0,1}; // implicito que dir2 = (dir0 + 2) % 3
+  // Valores nas outras coordenadas
+  // Valores na direcao 1 (dir1): implicito que dir1 = (dir0 + 1) % 3
+  const int av1[6] = {0,0,0,0,1,0};
+  // Valores na direcao 2 (dir2): implicito que dir2 = (dir0 + 2) % 3
+  const int av2[6] = {0,0,0,1,0,1};
  
   const int face_tipo[4] = {2,2,2,2}; //Triangulos
   const int nvf[4] = {3,3,3,3};

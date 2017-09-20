@@ -57,7 +57,7 @@ class GeProb
   void RenumerarNos();
   void RenumerarNos(int,int&);
   void Particionar_malha(const int * buf);
-  void ResolverComTrilinos(const std::string Pack,//const char * Pack,
+  void ResolverComTrilinos(const std::string Pack,
                            Epetra_Map  Map,
                            Teuchos::RCP<Epetra_FECrsMatrix>  A,
                            Teuchos::RCP<Epetra_FEVector>  RHS,
@@ -83,7 +83,7 @@ protected:
 
   int MyPID;              // Process number
   int NumProc;            // Total number of processes
-  int NumElemTypeents;      // Number of elements owned by this process
+  int NumElemTypeents;    // Number of elements owned by this process
   int NumGlobalElements;  // Total Number of elements
 
   int myid = 0;
@@ -964,7 +964,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
   // *************************************************************************
 
   int n=0;
-  for(int i=0;i<NUMNP;++i) { // *** Coordenadas dos Vertices  ***************
+  for(int i=0;i<NUMNP;++i) { // *** Coordenadas dos Vertices  ****************
     V[i].x=buffer_V[n++];
     V[i].y=buffer_V[n++];
     V[i].z=buffer_V[n++];
@@ -1296,7 +1296,7 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Construir_bordas()
 // ****************************************************************************************
 template <typename ElemType,int N_VAR,int N_FIELDS>
 void GeProb<ElemType,N_VAR,N_FIELDS>::Marcar_condicoes_contorno(int *BC,
-                                                         std::vector< std::vector<int> > face_mask)
+                                                                std::vector< std::vector<int> > face_mask)
 // ****************************************************************************************
 {
   // Inicializar o bflag com valores 0

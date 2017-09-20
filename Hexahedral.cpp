@@ -461,7 +461,7 @@ void Hexahedral::gauss_parameters_default()
 // ************************************************************************
 //
 // ************************************************************************
-void Hexahedral::inner_product_vector(double vec[],
+void Hexahedral::vector_of_integral_of_f_Phi_dv(double vec[],
 				      double (*func)(double,double,double),
 				      const Vertice vert[],const int map[],
 				      const double JV[])
@@ -536,7 +536,7 @@ void Hexahedral::inner_product_vector(double vec[],
 // ************************************************************************
 //
 // ************************************************************************
-void Hexahedral::inner_product_vector(double vec[],
+void Hexahedral::vector_of_integral_of_f_Phi_dv(double vec[],
 				      const double func[],
 				      const double JV[])
 {

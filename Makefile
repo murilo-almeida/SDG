@@ -83,7 +83,7 @@ SOURCES =	AMPFunctionsA.cpp\
 		DG_preamble.cpp\
 		DG_saidas_intermediarias.cpp\
 		Differentiation.cpp\
-		Eigenvectors.cpp\
+		DG_Eigenvectors.cpp\
 		Fluids.cpp\
 		Funcoes_globais.cpp\
 		Hexahedral.cpp\
@@ -118,7 +118,7 @@ OBJECTS =	AMPFunctionsA.o\
 		DG_preamble.o\
 		DG_saidas_intermediarias.o\
 		Differentiation.o\
-		Eigenvectors.o\
+		DG_Eigenvectors.o\
 		Fluids.o\
 		Funcoes_globais.o\
 		Hexahedral.o\

@@ -14,14 +14,15 @@
 #define _NEWMAT
 
 #define _MAC_OS
+#define HAVE_MPI
 
 //#define ECHO_ON
-// #define PRINTF_ON
+#define PRINTF_ON
 
 // Parametros para as matrizes locais dos elementos
 # define MAXNFIELDS 2
 # define MAXMODES  64
-# define MAXQ  20
+# define MAXQ  10
 # define MAXNB 202
 # define MAXNI 91
 # define MAXNN 100
@@ -31,6 +32,5 @@
 // Parametros para matrizes globais
 # define MAXNL 12000
 # define MAXNG 13000
-# define MAXNF 400
 
 #endif

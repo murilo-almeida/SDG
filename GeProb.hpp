@@ -333,23 +333,23 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Processar_elementos()
     switch(type_num){
 
       case 1:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Linear *>(ptrLinear[FieldOfVar[j]]);
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrLinear[FieldOfVar[j]];
       break;
 
       case 2:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Triangle *>(ptrTriang[FieldOfVar[j]]);
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrTriang[FieldOfVar[j]];
       break;
 
       case 3:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Quadrilateral *>(ptrQuadri[FieldOfVar[j]]);
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrQuadri[FieldOfVar[j]];
       break;
 
     case 4:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Tetrahedral *>(ptrTetrahedral[FieldOfVar[j]]);
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrTetrahedral[FieldOfVar[j]];
       break;
 
       case 5:
-        for(int j=0;j<N_VAR;++j) ptstdel[j]=static_cast<Hexahedral *>(ptrHexahedral[FieldOfVar[j]]);
+        for(int j=0;j<N_VAR;++j) ptstdel[j]=ptrHexahedral[FieldOfVar[j]];
         break;
 
       default:
@@ -1007,8 +1007,6 @@ void GeProb<ElemType,N_VAR,N_FIELDS>::Ler_e_Processar_malha(char *arq_geo)
 
   // *****************************************************
   // Construcao das aproximacoes das funcoes
-  // *** Iniciar parametros dos elementos padroes
-  // set_orders();
   // *****************************************************
   // processar dados da malha
   // *****************************************************

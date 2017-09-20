@@ -187,11 +187,10 @@ class Stdel
   double McMi_inv[MAXNBL][MAXNIL];//!< Matriz de massa inversa dos modos compacta de Schur
   int * emapv= nullptr; //!< edge_map_valores
   int * emapi= nullptr; //!< edge_map_inicio
-  
   int * bmapv= nullptr; //!< border_map_valores
   int * bmapi= nullptr; //!< border_map_inicio
   double *  D_Phi_val = nullptr;
-
+  
   //virtual void make_mass_matrices(int NFIELDS)=0;
 // virtual void printtoarray(const double u[], 
 // 			    const Vertice vert[], const int map[],

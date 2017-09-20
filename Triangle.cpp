@@ -133,6 +133,7 @@ void Triangle::set(int p0, int q0)
   printf("passou gauss_parameters\n");
   printf("Saindo de Triangle::set: nv = %d  nn = %d (< MAXMODES = %d) nb = %d (< MAXNB = %d)\n",nv,nn,MAXMODES,nb,MAXNB);
 	printf("Triangle::set nn = %d nb= %d\n",nn,nb);
+  
 #endif
  
   // Construcao da matriz Phi_val[nn][Q[0]*Q[1]]

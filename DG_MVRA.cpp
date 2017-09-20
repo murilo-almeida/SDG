@@ -147,6 +147,7 @@ void DG_Prob::DG_MatrizVetor_Epetra(const double Dt,
 };
 
 // ************************************************
+// ************************************************
 void DG_Prob::DG_conditionNumber(Epetra_Map Map)
 {
   char  arquivo_nome [80];

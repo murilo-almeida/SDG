@@ -9,7 +9,6 @@
 # include "MyOptions.h"
 
 // Epetra definitions
-#define HAVE_MPI
 #include "MyTrilinos.h"
 
 # include <cstdlib>
@@ -22,6 +21,7 @@
 #include <algorithm>
 #include <vector>
 #include <cstddef>
+#include "boost/multi_array.hpp"
 
 #ifdef _NEWMAT
 // NEWMAT

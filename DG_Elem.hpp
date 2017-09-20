@@ -19,8 +19,8 @@ class DG_Elem : public PhElem<2>
 {
 public:
   
-  DG_Elem(){ rho=1.0;vetores_iniciados=0;}// 0 (=FALSE)}; //(const int n = 1);
-  ~DG_Elem(){/* cout << "destruir PhElem\n"; */ };
+  DG_Elem(){ rho=1.0;vetores_iniciados=1;}// 1 (=FALSE)}; //(const int n = 1);
+  ~DG_Elem(){/*cout << "destruir DG_Elem\n";*/ };
   
   void inicia_vetores();
   void set_fontes(double sw,double sn){qw=sw; qn=sn;};

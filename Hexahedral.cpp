@@ -194,7 +194,7 @@ void Hexahedral::set(int p0, int q0)
   }
 #ifdef PRINTF_ON
   printf("Em Hexahedral::set  passou gauss_parameters\n");
-  printf("nb=%d emapv tem %d valores\n",nb,k);
+ // printf("nb=%d emapv tem %d valores\n",nb,k);
   printf("Saindo de Hexahedral::set: nv = %d  nn = %d (< MAXMODES = %d) nb = %d (< MAXNB = %d)\n",nv,nn,MAXMODES,nb,MAXNB);
   printf("Hexahedral::set nn = %d nb= %d\n",nn,nb);
 #endif

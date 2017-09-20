@@ -54,21 +54,19 @@ void DG_Elem::inicia_funcoes_na_borda(EDGE * border)
   // que podem nao existir nas bordas      *
   // ***************************************
   int h,i,j,pos;
-  int ndim = ptr_stdel[0]->ndim_val();
   double n_e[ndim];
   
   for(i=0;i<NumLocalVars;i++) {//i= variavel
     
-    int nborder= ptr_stdel[i]->nborder_val();
-    int nn     = ptr_stdel[i]->nn_val();
+    int nn     = numn[i];
     int qmax   = ptr_stdel[i]->qborder_val();
     int NGQP   = ptr_stdel[i]->NGQP_val();
     double phi[NGQP];
     
     //	double TP[nborder][nn][qmax];
     
-    double *** TP = new double ** [nborder];
-    for(h=0;h<nborder; h++) {
+    double *** TP = new double ** [numborders];
+    for(h=0;h<numborders; h++) {
       TP[h] = new double * [nn];
       for(j=0;j<nn;j++){
         TP[h][j] = new double [qmax];
@@ -114,7 +112,7 @@ void DG_Elem::inicia_funcoes_na_borda(EDGE * border)
     
     // Implementar nos elementos padroes (Triangle, Linear, LinearLeg, Quadrilateral e Tetrahedral)
     
-    for(h=0;h<nborder;h++){
+    for(h=0;h<numborders;h++){
       for(int ndir=0;ndir<ndim;ndir++){
         n_e[ndir]=border[border_num[h]].normal[ndir];
       }
@@ -141,7 +139,7 @@ void DG_Elem::inicia_funcoes_na_borda(EDGE * border)
     }
     
     // Libera memoria dinamica de TP
-    for(h=0;h<nborder; h++) {
+    for(h=0;h<numborders; h++) {
       for(j=0;j<nn;j++){
         delete [] TP[h][j]; TP[h][j]=nullptr;
       }
@@ -167,13 +165,10 @@ void DG_Elem::inicia_tracos( EDGE * border)
   // Calcular Phi e seu gradiente *
   // ******************************
   int i,j,h,pos;
-  int ndim = ptr_stdel[0]->ndim_val();
-  // int NGQP = ptr_stdel[0]->NGQP_val();
   double n_e[ndim];
   
   for(i=0;i<NumLocalVars;i++) {//i= variavel
-    int nn=ptr_stdel[i]->nn_val();
-    int nborder=ptr_stdel[i]->nborder_val();
+    int nn=numn[i];
     int NGQP=ptr_stdel[i]->NGQP_val();
     int qmax = ptr_stdel[i]->qborder_val();
     double phi[NGQP];
@@ -186,7 +181,7 @@ void DG_Elem::inicia_tracos( EDGE * border)
       ptr_stdel[i]->Gradiente(GradPhi[i][j],phi,ptvert,Vert_map);
       
       // calcula os tracos de gradiente de Phi
-      for(h=0; h < nborder; h++) { // h = aresta
+      for(h=0; h < numborders; h++) { // h = aresta
         //printf("Ponto teste em inicia_tracos i=%d j=%d h=%d \n",i,j,h);
         for(int ndir=0; ndir<ndim;ndir++){
           // trace eh válido somente quando ha pontos de Gauss na borda
@@ -227,18 +222,16 @@ void DG_Elem::inicia_tracos( EDGE * border)
 void DG_Elem::calcula_tracos(Fluids fls)
 {
   
-  const int ndim=ptr_stdel[0]->ndim_val();
-  const int nborder=ptr_stdel[0]->nborder_val();
   const int qborder=ptr_stdel[0]->qborder_val();
   
-  const int ns=ptr_stdel[sat]->nn_val();
-  const int np=ptr_stdel[pres]->nn_val();
+  const int ns=numn[sat];
+  const int np=numn[pres];
   
   int pos;
   double aux;
   
   // Trsn
-  for(int h=0; h < nborder; h++){
+  for(int h=0; h < numborders; h++){
     for(int q=0; q < qborder; q++){
       aux=0.0;
       for(int n=0; n < ns; n++){
@@ -251,7 +244,7 @@ void DG_Elem::calcula_tracos(Fluids fls)
   }
   
   // Trpw
-  for(int h=0; h < nborder; h++){
+  for(int h=0; h < numborders; h++){
     for(int q=0; q < qborder; q++){
       aux=0.0;
       for(int n=0; n < np ;n++){
@@ -265,7 +258,7 @@ void DG_Elem::calcula_tracos(Fluids fls)
   
   // TrKgrad_sn e TrKgrad_pc
   
-  for(int h=0; h < nborder; h++){
+  for(int h=0; h < numborders; h++){
     for(int q=0; q < qborder; q++){
       double aux1= fls.dpc(Trsn[h][q]);   // <---- fonte de dificuldade
       for(int ndir=0; ndir < ndim; ndir++){
@@ -281,7 +274,7 @@ void DG_Elem::calcula_tracos(Fluids fls)
   
   // TrKgrad_pw
   
-  for(int h=0; h < nborder; h++){
+  for(int h=0; h < numborders; h++){
     for(int q=0; q < qborder; q++){
       for(int ndir=0; ndir < ndim; ndir++){
         aux=0.0;
@@ -317,12 +310,10 @@ void DG_Elem::echo_traco(FILE * f_eco)
 {
   int pos;
   for(int i=0;i<NumLocalVars;++i){
-    int nborder=ptr_stdel[i]->nborder_val();
-    int nn=     ptr_stdel[i]->nn_val();
+    int nn= numn[i];
     int qmax =  ptr_stdel[i]->qborder_val();
-    int ndim =  ptr_stdel[i]->ndim_val();
     
-    for(int h=0;h<nborder;h++){
+    for(int h=0;h<numborders;h++){
       
       for(int j=0;j<nn;j++){
         
@@ -354,14 +345,11 @@ void DG_Elem::echo_traco(FILE * f_eco)
     fprintf(f_eco,"\nPhi para o elemento\n");
     for(int i=0;i<NumLocalVars;++i){
       fprintf(f_eco,"\n variavel %d\n",i);
-      int nn     =ptr_stdel[i]->nn_val();
+      int nn     =numn[i];
       NGQP       =ptr_stdel[i]->NGQP_val();
-      int nborder=ptr_stdel[i]->nborder_val();
       int qmax   =ptr_stdel[i]->qborder_val();
       
-      //int ndim =  ptr_stdel[i]->ndim_val();
-      
-      for(int h=0;h<nborder;++h){
+      for(int h=0;h<numborders;++h){
         fprintf(f_eco,"\naresta local %d sinal = %d\n",h,sinal[h]);
         for(int j=0;j<nn;++j){
           
@@ -434,7 +422,6 @@ void DG_Elem::Traco_pw(const int & h,double *saida)
 void DG_Elem::Traco_Kgrad_pw(const int & h,double ** saida)
 {
   int qmax=ptr_stdel[1]->qborder_val();
-  int ndim = ptr_stdel[1]->ndim_val();
   for(int k=0;k<ndim;k++){
     for(int q=0;q < qmax;q++){
       saida[k][q]=TrKgrad_pw[h][k][q];
@@ -445,7 +432,6 @@ void DG_Elem::Traco_Kgrad_pw(const int & h,double ** saida)
 void DG_Elem::Traco_Kgrad_pc(const int & h,double ** saida)
 {
   int qmax=ptr_stdel[0]->qborder_val();
-  int ndim = ptr_stdel[1]->ndim_val();
   for(int k=0;k<ndim;k++){
     for(int q=0;q < qmax;q++) {
       saida[k][q]=TrKgrad_pc[h][k][q];
@@ -456,7 +442,6 @@ void DG_Elem::Traco_Kgrad_pc(const int & h,double ** saida)
 void DG_Elem::Traco_Kgrad_sn(const int & h,double ** saida)
 {
   int qmax=ptr_stdel[0]->qborder_val();
-  int ndim = ptr_stdel[1]->ndim_val();
   
   for(int k=0;k < ndim;k++){
     for(int q=0;q < qmax;q++){
@@ -470,11 +455,8 @@ void DG_Elem::Traco_phi(const int & lado,const int & ivar,
                                      const int & ind, double * saida)
 {
   int qmax=ptr_stdel[ivar]->qborder_val();
-  //int NGQP=ptr_stdel[ivar]->NGQP_val();
-  //double phi[NGQP];
   int pos;
-  //ptr_stdel[ivar]->eval_Phi(ind,phi);
-  //ptr_stdel[ivar]->trace(lado,qmax,sinal[lado],phi,saida);
+ 
   if(ptr_stdel[ivar]->is_on_border(ind,lado,pos)){
     for(int q=0;q<qmax;q++){
       saida[q]=TrPhi[ivar][lado][pos][q];
@@ -491,7 +473,6 @@ void DG_Elem::Traco_grad_phi(const int & lado,const int & ivar,
                                           const int & ind,double ** saida)
 {// Ficou desnecessaria quando criei Traco_Kgrad_phi_n abaixo
   int qmax=ptr_stdel[0]->qborder_val();
-  int ndim = ptr_stdel[1]->ndim_val();
   for(int k=0;k<ndim;k++){
     for(int q=0;q<qmax;q++)
       saida[k][q]=TrGradPhi[ivar][lado][ind][k][q];
@@ -516,8 +497,7 @@ void DG_Elem::VolumeIntegrals_IG(Fluids fls,  int & count,
   
   int qmax=ptr_stdel[sat]->qborder_val();
   int NGQP=ptr_stdel[sat]->NGQP_val();
-  int ndim=ptr_stdel[sat]->ndim_val();
-  int nborder  =ptr_stdel[sat]->nborder_val();
+  
   
   int np;//ns
   int h,k,m;
@@ -592,7 +572,7 @@ void DG_Elem::VolumeIntegrals_IG(Fluids fls,  int & count,
    }
    */
   
-  for(h=0;h<nborder;h++){
+  for(h=0;h<numborders;h++){
     ptr_stdel[sat] ->trace(h,qmax,sinal[h],sn,Trsn[h]);
     ptr_stdel[pres]->trace(h,qmax,sinal[h],pw,Trpw[h]);
     for(k=0;k<ndim;k++){
@@ -602,28 +582,10 @@ void DG_Elem::VolumeIntegrals_IG(Fluids fls,  int & count,
     }
   }
   
-  
-  /*
-   for(h=0;h<nborder;h++)
-   {
-   for(k=0;k<ndim;k++)
-   {
-   for(int q=0;q<qmax;q++)
-   {
-   if(test[h][k][q]!=TrKgrad_pw[h][k][q])
-   {
-   printf("Em h= %d ndir =%d q=%d test = %g diferenca de TrKgrad_sn = %g   \n", h,k,q,test[h][k][q],
-   TrKgrad_sn[h][k][q]-test[h][k][q]);
-   }
-   }
-   }
-   }
-   */
-  
   //
   // printf("VolumeIntegrals_IG Ate aqui 2\n");
-  np=ptr_stdel[pres]->nn_val();
-  // ns=ptr_stdel[sat ]->nn_val();
+  np=numn[pres];
+  
   for(int rp=0;rp<np;rp++){ // PE_VI
     // *****************************
     // calculo do vetor
@@ -679,8 +641,6 @@ void DG_Elem::VolumeIntegrals_UMFPACK(const double Dt,Fluids fls, int & count,
   
   const int qmax=ptr_stdel[sat]->qborder_val();
   const int NGQP=ptr_stdel[sat]->NGQP_val();
-  const int ndim=ptr_stdel[sat]->ndim_val();
-  const int nborder=ptr_stdel[sat]->nborder_val();
   
   int h,k,m;
   double aux,aaux;
@@ -763,7 +723,7 @@ void DG_Elem::VolumeIntegrals_UMFPACK(const double Dt,Fluids fls, int & count,
    }
    }
    */
-  for(h=0;h<nborder;h++) {
+  for(h=0;h<numborders;h++) {
     ptr_stdel[sat]->trace(h,qmax,sinal[h],sn,Trsn[h]);
     ptr_stdel[pres]->trace(h,qmax,sinal[h],pw,Trpw[h]);
     for(k=0;k<ndim;k++) {
@@ -772,21 +732,13 @@ void DG_Elem::VolumeIntegrals_UMFPACK(const double Dt,Fluids fls, int & count,
       ptr_stdel[pres]->trace(h,qmax,sinal[h],Kgrad_pw[k],TrKgrad_pw[h][k]);
     }
   }
-  /* for(h=0;h<nborder;h++) {
-   for(k=0;k<ndim;k++) {
-   for(int q=0;q<qmax;q++) {
-   if(test[h][k][q]!=TrKgrad_pw[h][k][q]) {
-   printf("Em h= %d ndir =%d q=%d test = %g diferenca de TrKgrad_sn = %g   \n", h,k,q,test[h][k][q],TrKgrad_sn[h][k][q]-test[h][k][q]);
-   }
-   }
-   }
-   } */
+  
   // *************************************
   // Passar os tracos de sn e pw para os
   // vetores globais
   // *************************************
   int ind = gbtrbmap;
-  for(h=0;h<nborder;h++) {
+  for(h=0;h<numborders;h++) {
     for(int q=0;q<qmax;q++) {
       gbtrpw[ind]=Trpw[h][q];
       gbtrsn[ind]=Trsn[h][q];
@@ -794,10 +746,10 @@ void DG_Elem::VolumeIntegrals_UMFPACK(const double Dt,Fluids fls, int & count,
     }
   }
   
-  const int ns=ptr_stdel[sat ]->nn_val();
-  const int np=ptr_stdel[pres]->nn_val();
+  const int ns=numn[sat];
+  const int np=numn[pres];
   const int ntot=ns+np;// Num total de modos no elemento
-  const int n0 = ptr_stdel[0]->nn_val();// Num de modos para a variavel 0
+  const int n0 = numn[0];// Num de modos para a variavel 0
   
   // vetor com indices
   int mr,ml;
@@ -1012,7 +964,6 @@ void DG_Elem::VolumeIntegralsT(const double Dt_new, const double Dt_old,
 {
   //cout << "DG_VI.cc  DG_Elem::VolumeIntegralsT\n";
   
-  // const int qmax=ptr_stdel[sat]->qborder_val();
   const int NGQP=ptr_stdel[sat]->NGQP_val();
   
   int m;
@@ -1034,8 +985,7 @@ void DG_Elem::VolumeIntegralsT(const double Dt_new, const double Dt_old,
   // Calcula as variaveis sn e pw e seus gradientes nos pontos de Gauss
   ptr_stdel[sat]->evalGQ(sn,u0[sat]);
   
-  //const int np=ptr_stdel[pres]->nn_val();
-  const int ns=ptr_stdel[sat ]->nn_val();
+  const int ns=numn[sat];
   
   for(int rs=0;rs<ns;rs++) { // SE_VI
     // *****************************
@@ -1077,8 +1027,6 @@ void DG_Elem::VolumeTracos(const double Dt,Fluids fls, double * gbtrsn, double *
   
   const int qmax=ptr_stdel[sat]->qborder_val();
   const int NGQP=ptr_stdel[sat]->NGQP_val();
-  const int nborder = ptr_stdel[sat]->nborder_val();
-  const int ndim=ptr_stdel[sat]->ndim_val();
   
   int h,k,m;
   double aux;
@@ -1140,7 +1088,7 @@ void DG_Elem::VolumeTracos(const double Dt,Fluids fls, double * gbtrsn, double *
   // salva os tracos de K * gradientes
   //calcula_tracos(fls);// <--- tem problemas no calculo de TrKgrad_pc (usa grad_pc= dpc * grad_sn)
   
-  for(h=0;h<nborder;h++) {
+  for(h=0;h<numborders;h++) {
     ptr_stdel[sat]->trace(h,qmax,sinal[h],sn,Trsn[h]);
     ptr_stdel[pres]->trace(h,qmax,sinal[h],pw,Trpw[h]);
     for(k=0;k<ndim;k++) {
@@ -1157,7 +1105,7 @@ void DG_Elem::VolumeTracos(const double Dt,Fluids fls, double * gbtrsn, double *
   // vetores globais
   // *************************************
   int ind = gbtrbmap;
-  for(h=0;h<nborder;h++) {
+  for(h=0;h<numborders;h++) {
     for(int q=0;q<qmax;q++) {
       gbtrpw[ind]=Trpw[h][q];
       gbtrsn[ind]=Trsn[h][q];
@@ -1185,8 +1133,6 @@ void DG_Elem::VolumeIntegrals(const double Dt,Fluids fls,
   
   const int qmax=ptr_stdel[sat]->qborder_val();
   const int NGQP=ptr_stdel[sat]->NGQP_val();
-  const int nborder=ptr_stdel[sat]->nborder_val();
-  const int ndim=ptr_stdel[sat]->ndim_val();
   
   int h,k,m;
   double aux,aaux;
@@ -1281,7 +1227,7 @@ void DG_Elem::VolumeIntegrals(const double Dt,Fluids fls,
   // e nao depende do numero de modos
   // *******************************************************************
   
-  for(h=0;h<nborder;h++) {
+  for(h=0;h<numborders;h++) {
     ptr_stdel[sat] ->trace(h,qmax,sinal[h],sn,Trsn[h]);
     ptr_stdel[pres]->trace(h,qmax,sinal[h],pw,Trpw[h]);
     for(k=0;k<ndim;k++) {
@@ -1292,17 +1238,7 @@ void DG_Elem::VolumeIntegrals(const double Dt,Fluids fls,
   }
   
   // Teste
-  /*
-   for(h=0;h<nborder;h++) {
-   for(k=0;k<ndim;k++) {
-   for(int q=0;q<qmax;q++) {
-   if(test[h][k][q]!=TrKgrad_pc[h][k][q]) {
-   printf("h= %1d q=%1d %11.4e %11.4e %11.4e   \n", h,q,test[h][k][q],TrKgrad_pc[h][k][q],TrKgrad_pc[h][k][q]-test[h][k][q]);
-   }
-   }
-   }
-   }
-   */
+ 
   // Fim do calculo dos tracos
   // ****************************************************************************
   // 3
@@ -1313,7 +1249,7 @@ void DG_Elem::VolumeIntegrals(const double Dt,Fluids fls,
   // *************************************
   // cout << "gbtrbmap = "<< gbtrbmap << "\n";
   int ind = gbtrbmap;
-  for(h=0;h<nborder;h++) {
+  for(h=0;h<numborders;h++) {
     for(int q=0;q<qmax;q++) {
       gbtrpw[ind]=Trpw[h][q];
       gbtrsn[ind]=Trsn[h][q];
@@ -1321,10 +1257,10 @@ void DG_Elem::VolumeIntegrals(const double Dt,Fluids fls,
     }
   }
   
-  const int ns=ptr_stdel[sat ]->nn_val();
-  const int np=ptr_stdel[pres]->nn_val();
+  const int ns=numn[sat];
+  const int np=numn[pres];
   const int ntot=ns+np;// Num total de modos no elemento
-  const int n0 = ptr_stdel[0]->nn_val();// Num de modos para a variavel 0
+  const int n0 = numn[0];// Num de modos para a variavel 0
   
   int mi,mj;
   double mx /*= new double*/ [ntot*ntot];
@@ -1529,20 +1465,18 @@ void DG_Elem::inicia_vetores()
   int nn;//nb,q0,q1;
   int h,i,j,k;
   
-  if(vetores_iniciados != 0) { cout<< "vetores locais de PhElem já iniciados\n"; }
+  if(vetores_iniciados == 0) { cout<< "vetores locais de PhElem já iniciados\n"; }
   
   else {
-    vetores_iniciados = 1;
+    vetores_iniciados = 0;
     //cout<< "DG_Elem::inicia_vetores()\n";
     for (k=0;k<NumLocalVars;++k){
-      nn=ptr_stdel[k]->nn_val();
+      nn=numn[k];
       u0[k] = new double [nn];
-      //  ua[k] = new double [nn];
       usave[k] = new double [nn];
       for(i=0;i<nn;++i){
         u0[k][i]=0.0;
       }
-      // nb=ptr_stdel[k]->nb_val();
     }
     // **************************************
     // Calcular o Jacobiano   *             *
@@ -1550,9 +1484,7 @@ void DG_Elem::inicia_vetores()
     // q0= ptr_stdel[0]->Q_val(0);
     // q1= ptr_stdel[0]->Q_val(1);
     
-    int ndim =  ptr_stdel[0]->ndim_val();
     int qmax = ptr_stdel[0]->qborder_val();
-    int nborder = ptr_stdel[0]->nborder_val();
     int NGQP;
     //printf("Calculo do Jacobiano: dimensao=%d\n",NGQP);
     //JV = new double [NGQP]; // opcao 2: um unico vetor
@@ -1566,7 +1498,7 @@ void DG_Elem::inicia_vetores()
     // Alocacao dinamica de memoria para a matriz de massa de sn *
     // Mass_sn[i][j]                                             *
     // ***********************************************************
-    int ns=ptr_stdel[0]->nn_val();
+    int ns=numn[0];
     Mass_sn = new double * [ns];
     for(i=0;i<ns;i++)
       Mass_sn[i] = new double [ns];
@@ -1587,7 +1519,7 @@ void DG_Elem::inicia_vetores()
     // [lado] [var] [indice] [direcao] [posicao]   *
     // *********************************************
     
-    Jb = new double [nborder*qmax];
+    Jb = new double [numborders*qmax];
     //cout << "INICIOU JB !!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
     // **************************************
     // Alocacao dinamica de memoria para os *
@@ -1596,7 +1528,7 @@ void DG_Elem::inicia_vetores()
     // **************************************
     GradPhi = new double *** [NumLocalVars];// variavel i NumLocalVars=2
     for(i=0;i<NumLocalVars;++i){
-      nn=ptr_stdel[i]->nn_val();
+      nn=numn[i];
       NGQP=ptr_stdel[i]->NGQP_val();
       GradPhi[i] = new double ** [nn];// modo j
       for(j=0;j<nn;j++){
@@ -1613,7 +1545,7 @@ void DG_Elem::inicia_vetores()
     // **************************************
     LaplacianoPhi = new double ** [NumLocalVars];// variavel i  NumLocalVars=2
     for(i=0;i<NumLocalVars;++i){
-      nn  =ptr_stdel[i]->nn_val();
+      nn  =numn[i];
       NGQP=ptr_stdel[i]->NGQP_val();
       LaplacianoPhi[i] = new double * [nn];// indice j
       for(j=0;j<nn;j++){
@@ -1624,12 +1556,11 @@ void DG_Elem::inicia_vetores()
     // Alocacao dinamica de memoria para os tracos *
     // [var] [lado] [modo] [direcao] [posicao]   *
     // *********************************************
-    nborder=ptr_stdel[0]->nborder_val();
     TrGradPhi = new double **** [NumLocalVars];// variavel i  NumLocalVars=2
     for(i=0;i<NumLocalVars;++i){
-      nn=ptr_stdel[i]->nn_val();
-      TrGradPhi[i] = new double *** [nborder];//lado h
-      for(h=0;h<nborder;h++){
+      nn=numn[i];
+      TrGradPhi[i] = new double *** [numborders];//lado h
+      for(h=0;h<numborders;h++){
         TrGradPhi[i][h] = new double ** [nn];// modo j
         for(j=0;j<nn;j++){
           TrGradPhi[i][h][j] = new double * [ndim];// direcao k
@@ -1646,9 +1577,9 @@ void DG_Elem::inicia_vetores()
     // *********************************************
     TrKgradPhi_n = new double *** [NumLocalVars];//variavel i  NumLocalVars=2
     for(i=0;i<NumLocalVars;++i){
-      nn=ptr_stdel[i]->nn_val();
-      TrKgradPhi_n[i] = new double ** [nborder];// lado h
-      for(h=0;h<nborder;h++){
+      nn=numn[i];
+      TrKgradPhi_n[i] = new double ** [numborders];// lado h
+      for(h=0;h<numborders;h++){
         TrKgradPhi_n[i][h] = new double * [nn];// modo j
         for(j=0;j<nn;j++){
           TrKgradPhi_n[i][h][j] = new double [qmax];// posicao
@@ -1662,8 +1593,8 @@ void DG_Elem::inicia_vetores()
     // ****************************************************
     TrPhi = new double *** [NumLocalVars];// variavel i  NumLocalVars=2
     for(i=0;i<NumLocalVars;++i){
-      TrPhi[i] = new double ** [nborder]; //lado h
-      for(h=0;h<nborder;h++){
+      TrPhi[i] = new double ** [numborders]; //lado h
+      for(h=0;h<numborders;h++){
         int pmax = 1;
         for(int t=0; t < (ndim-1); t++) {
           pmax *= ( (ptr_stdel[i]->P_val(t)) + 1);// pmax = P +1
@@ -1678,35 +1609,35 @@ void DG_Elem::inicia_vetores()
     // Alocacao dinamica de memoria para os tracos *
     // [lado][posicao]                             *
     // *********************************************
-    Trsn = new double * [nborder];//lado h
-    for(h=0;h<nborder;h++){
+    Trsn = new double * [numborders];//lado h
+    for(h=0;h<numborders;h++){
       Trsn[h] = new double [qmax];// posicao
     }
     
-    Trpw = new double * [nborder];//lado h
-    for(h=0;h<nborder;h++){
+    Trpw = new double * [numborders];//lado h
+    for(h=0;h<numborders;h++){
       Trpw[h] = new double [qmax];// posicao
     }
     // *********************************************
     // Alocacao dinamica de memoria para os tracos *
     // [lado] [direcao] [posicao]                  *
     // *********************************************
-    TrKgrad_sn = new double ** [nborder];//lado h
-    for(h=0;h<nborder;h++){
+    TrKgrad_sn = new double ** [numborders];//lado h
+    for(h=0;h<numborders;h++){
       TrKgrad_sn[h] = new double * [ndim];// direcao k
       for(k=0;k<ndim;k++){
         TrKgrad_sn[h][k] = new double  [qmax];// posicao
       }
     }
-    TrKgrad_pw = new double ** [nborder];//lado h
-    for(h=0;h<nborder;h++){
+    TrKgrad_pw = new double ** [numborders];//lado h
+    for(h=0;h<numborders;h++){
       TrKgrad_pw[h] = new double * [ndim];// direcao k
       for(k=0;k<ndim;k++){
         TrKgrad_pw[h][k] = new double  [qmax];// posicao
       }
     }
-    TrKgrad_pc = new double ** [nborder];//lado h
-    for(h=0;h<nborder;h++){
+    TrKgrad_pc = new double ** [numborders];//lado h
+    for(h=0;h<numborders;h++){
       TrKgrad_pc[h] = new double * [ndim];// direcao
       for(k=0;k<ndim;k++){
         TrKgrad_pc[h][k] = new double  [qmax];// posicao
@@ -1718,8 +1649,8 @@ void DG_Elem::inicia_vetores()
 // ****************************************************************************
 void DG_Elem::finaliza_vetores()
 {
-  if(vetores_iniciados == 1) {
-    vetores_iniciados = 0;
+  if(vetores_iniciados == 0) {
+    vetores_iniciados = 1;
     //cout<< "DG_Elem::finaliza_vetores()\n";
     delete [] JV; JV=nullptr;
     delete [] Jb; Jb=nullptr;
@@ -1736,15 +1667,14 @@ void DG_Elem::finaliza_vetores()
     delete [] sna;sna=nullptr;
     delete [] pwa;pwa=nullptr;
     
-    int ns=ptr_stdel[0]->nn_val();
+    int ns=numn[0];
     for(i=0;i<ns;i++){
       delete [] Mass_sn[i]; Mass_sn[i]=nullptr;
     }
     delete [] Mass_sn; Mass_sn=nullptr;
     
-    int ndim =ptr_stdel[0]->ndim_val();
     for(i=0;i<2;i++){
-      int nn=ptr_stdel[i]->nn_val();
+      int nn=numn[i];
       for(j=0;j<nn;j++){
         for(k=0;k<ndim;k++){
           delete [] GradPhi[i][j][k]; GradPhi[i][j][k]=nullptr;// posicao
@@ -1759,10 +1689,9 @@ void DG_Elem::finaliza_vetores()
     delete [] LaplacianoPhi; LaplacianoPhi=nullptr;
     
     // traco de grad phi
-    int nborder=ptr_stdel[0]->nborder_val();
     for(int i=0;i<2;i++){
-      for(int h=0;h<nborder;h++){
-        int nn=ptr_stdel[i]->nn_val();
+      for(int h=0;h<numborders;h++){
+        int nn=numn[i];
         for(j=0;j<nn;j++){
           for(k=0;k<ndim;k++){
             delete [] TrGradPhi[i][h][j][k];TrGradPhi[i][h][j][k]=nullptr;// posicao
@@ -1776,8 +1705,8 @@ void DG_Elem::finaliza_vetores()
     delete [] TrGradPhi;TrGradPhi=nullptr;
     // traco de grad phi dot n
     for(int i=0;i<2;i++){
-      for(int h=0;h<nborder;h++){
-        int nn=ptr_stdel[i]->nn_val();
+      for(int h=0;h<numborders;h++){
+        int nn=numn[i];
         for(j=0;j<nn;j++){
           delete [] TrKgradPhi_n[i][h][j];TrKgradPhi_n[i][h][j]=nullptr;
         }
@@ -1790,7 +1719,7 @@ void DG_Elem::finaliza_vetores()
     // traco de Phi
     for(int i=0;i < 2;i++){
       int p0=ptr_stdel[i]->P_val(0);
-      for(int h=0;h < nborder;h++){
+      for(int h=0;h < numborders;h++){
         for(j=0;j<p0;j++){
           delete [] TrPhi[i][h][j]; TrPhi[i][h][j]=nullptr;
         }
@@ -1804,13 +1733,13 @@ void DG_Elem::finaliza_vetores()
     // [lado][posicao]                             *
     // *********************************************
     int h;
-    for(h=0;h<nborder;h++){
+    for(h=0;h<numborders;h++){
       delete [] Trsn[h];Trsn[h]=nullptr;
       delete [] Trpw[h];Trpw[h]=nullptr;
     }
     delete [] Trsn;Trsn=nullptr;
     delete [] Trpw;Trpw=nullptr;
-    for(h=0;h<nborder;h++){
+    for(h=0;h<numborders;h++){
       for(k=0;k<ndim;k++){
         delete [] TrKgrad_sn[h][k];TrKgrad_sn[h][k]=nullptr;
         delete [] TrKgrad_pw[h][k];TrKgrad_pw[h][k]=nullptr;

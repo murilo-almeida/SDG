@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
   Epetra_SerialComm Comm;
 #endif
   
- 
   if(argc!=2) {
       if(rank==0){
         printf("Numero de argumentos de chamada diferente de 2!\n");

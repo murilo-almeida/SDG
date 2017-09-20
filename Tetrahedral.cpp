@@ -554,7 +554,7 @@ void Tetrahedral::make_local_matrices()
     }
   }
 #ifdef PRINTF_ON
-  printf("Saindo Tetrahedral::make_local_matrices: nb = %d  Ni= %d\n", nb,Ni);
+//  printf("Saindo Tetrahedral::make_local_matrices: nb = %d  Ni= %d\n", nb,Ni);
 #endif
 };
  

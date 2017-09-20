@@ -7,15 +7,14 @@
 // ***************************************************************************
 // *******************
 // Iteracao temporal *
+// *******************
 // Minha implementacao do Metodo de Newton-Raphson em paralelo
 // ***************************************************************************
 void DG_Prob::DG_Iterate()
 {
   
   Epetra_Map Map(NumD,0,*Comm);
-  //Teuchos::RCP<Epetra_FECrsMatrix> A = Teuchos::rcp (new Epetra_FECrsMatrix (Copy, Map, 5));//(Copy,Map,0);//&NNz[0]);
-  //Teuchos::RCP<Epetra_FEVector> RHS = Teuchos::rcp(new Epetra_FEVector(Map,1));
-  
+ 
   tnc=0;
   // *****************************************
   // Arquivos de saida
@@ -196,5 +195,5 @@ void DG_Prob::DG_Iterate()
 // ***************************************************************************
 // *******************
 // Iteracao temporal *
-// Minha implementacao para usar o Trilinos NOX
+// *******************
 // ***************************************************************************

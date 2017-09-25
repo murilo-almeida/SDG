@@ -8,7 +8,8 @@ INCP	= -I/opt/local/include/newmat
 LSPECTRAL= -L/Users/murilo/MeusProjetos/Spectral/lib -lSpectral
 LNEWMAT = -L/opt/local/lib -lnewmat
 MY_RPATH1 = -rpath $(subst -L, ,$(Trilinos_LIBRARY_DIRS))
-MY_RPATH = $(MY_RPATH1) -rpath /Users/murilo/temp/Spectral/lib
+MY_RPATH2 = -rpath /Users/murilo/MeusProjetos/Spectral/lib
+MY_RPATH = $(MY_RPATH1)
 
 $(warning $(Trilinos_LIBRARY_DIRS))
 $(warning MY_RPATH = $(MY_RPATH))

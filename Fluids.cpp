@@ -1,4 +1,5 @@
 # include "spectral.h"
+# include "Fluids.h"
 
 // *****************************************************************************
 double const Fluids::d2pc(double s)

@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Murilo Almeida. All rights reserved.
 //
 # include "spectral.h"
+# include "DG_Prob.h"
 
 // Global variables
 double p_in, p_out, sn_in, sn_ini, pw_ini;

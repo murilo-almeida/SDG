@@ -31,22 +31,10 @@ struct Vertice /*! Vertice = Ponto geometrico */
  * \param z = coordinate z
  * \param part_num = number of the partition that holds it
  */
-/*****************************************************************************/
-//struct Edado /*! Edado = Dados para definir o elemento */
-/*****************************************************************************/
-//{
-//  int ind,tipo,nv;
-//  int vert[8];
-//};
-/*! \struct Edado
- * Dados de entrada dos elementos
- * \param ind = indice do elemento
- * \param tipo = tipo do elemento
- * \param nv = numero de vertices
- * \param vert[] = conjunto com os indices dos vertices do elemento
- */
 
-struct Elemento {
+/*****************************************************************************/
+struct Elemento { /*! Elemento = Dados para definir o elemento */
+/*****************************************************************************/
   int ind;
   int tipo;
   int numv;
@@ -56,6 +44,13 @@ struct Elemento {
   Elemento(int nv) { numv = nv; vert.resize(nv);/* = new int [nv];*/ }
   ~Elemento();//{ delete [] vert; vert=nullptr;}
 };
+/*! \struct Elemento
+ * Dados de entrada dos elementos
+ * \param ind = indice do elemento
+ * \param tipo = tipo do elemento
+ * \param numv = numero de vertices
+ * \param vert[] = conjunto com os indices dos vertices do elemento
+ */
 
 struct BCRegion {
   int elnum;

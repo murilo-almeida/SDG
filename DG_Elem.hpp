@@ -11,9 +11,10 @@
 
 #include <stdio.h>
 # include "spectral.h"
-
+# include "Fluids.h"
 # include "PhElem.hpp"
 
+enum var_nomes {sat,pres} ; // Esta ordem influencia na leitura dos parametros
 // *************************************************************************
 class DG_Elem : public PhElem<2>
 {

@@ -4,8 +4,14 @@ include /opt/local/Trilinos/include/Makefile.export.Trilinos
 
 
 INCP	= -I/opt/local/include/newmat
-LSPECTRAL	= -L/opt/local/lib -lnewmat
-MY_RPATH = -rpath $(subst -L, ,$(Trilinos_LIBRARY_DIRS))
+#-I/Users/murilo/temp/Spectral/include
+LSPECTRAL= -L/Users/murilo/MeusProjetos/Spectral/lib -lSpectral
+LNEWMAT = -L/opt/local/lib -lnewmat
+MY_RPATH1 = -rpath $(subst -L, ,$(Trilinos_LIBRARY_DIRS))
+MY_RPATH = $(MY_RPATH1) -rpath /Users/murilo/temp/Spectral/lib
+
+$(warning $(Trilinos_LIBRARY_DIRS))
+$(warning MY_RPATH = $(MY_RPATH))
 
 # Make sure to use same compilers and flags as Trilinos
 CXX=$(Trilinos_CXX_COMPILER)
@@ -19,9 +25,10 @@ FORT_FLAGS=$(Trilinos_Fortran_COMPILER_FLAGS) $(USER_FORT_FLAGS)
 
 INCLUDE_DIRS=$(Trilinos_INCLUDE_DIRS) $(Trilinos_TPL_INCLUDE_DIRS) $(INCP)
 LIBRARY_DIRS=-L/usr/lib $(Trilinos_LIBRARY_DIRS)  $(Trilinos_TPL_LIBRARY_DIRS)
-LIBRARIES=$(Trilinos_LIBRARIES) $(Trilinos_TPL_LIBRARIES) $(LSPECTRAL)
+LIBRARIES=$(Trilinos_LIBRARIES) $(Trilinos_TPL_LIBRARIES) $(LNEWMAT)
 
 LINK_FLAGS=$(Trilinos_EXTRA_LD_FLAGS)
+LIB_FLAGS = -shared
 
 #just assuming that epetra is turned on.
 #DEFINES=-DMYAPP_EPETRA
@@ -31,7 +38,7 @@ CLINKER	= $(CXX)
 
 
 ####### Target
-
+TARGET_LIB = libSpectral.dylib
 TARGET	= main
 DESTDIR = ./
 VER_MAJ = 1
@@ -40,14 +47,10 @@ VER_MIN = 0
 ####### Arquivos que precisam ser mudados de acordo com o seu objetivo
 
 TEMPLATED = 	GeProb.hpp \
-                PhElem.hpp 	
+                PhElem.hpp \
+		DG_Elem.hpp
 
-HEADERS =	DG_EI_Header.h\
-		DG_Prob.h\
-		DG_Elem.hpp \
-		DG_saidas_intermediarias.h\
-		Fluids.h\
-		Funcoes_c.h\
+HEADERS =	Funcoes_c.h\
 		Geo.h\
 		Hexahedral.h\
 		Linear.h\
@@ -59,7 +62,13 @@ HEADERS =	DG_EI_Header.h\
 		Tetrahedral.h\
 		Triangle.h\
 		Tstruct.h\
-		spectral.h
+		spectral.h\
+		virtual.h\
+		DG_EI_Header.h\
+		DG_Prob.h\
+		DG_saidas_intermediarias.h\
+		Fluids.h
+
 SOURCES =	AMPFunctionsA.cpp\
 		ASPFunctions.cpp\
 		DG.cpp\
@@ -95,9 +104,22 @@ SOURCES =	AMPFunctionsA.cpp\
 		Transfere_rst.cpp\
 		Triangle.cpp\
 		main.cpp
-OBJECTS =	AMPFunctionsA.o\
+
+OBJECTS_STDEL =	AMPFunctionsA.o\
 		ASPFunctions.o\
-		DG.o\
+		Differentiation.o\
+		Funcoes_globais.o\
+		Hexahedral.o\
+		Linear.o\
+		Particao.o\
+		Quadrilateral.o\
+		Stdel.o\
+		Tetrahedral.o\
+		Transfere_rst.o\
+		Triangle.o
+
+
+OBJECTS_DG =	DG.o\
 		DG_EI_Inflow.o\
 		DG_EI_Inflow_b.o\
 		DG_EI_Inflow_a.o\
@@ -113,22 +135,16 @@ OBJECTS =	AMPFunctionsA.o\
 		DG_MVRA.o\
 		DG_Prob.o\
 		DG_Elem.o \
+		DG_Eigenvectors.o\
 		DG_driver.o\
 		DG_eco.o\
 		DG_preamble.o\
 		DG_saidas_intermediarias.o\
-		Differentiation.o\
-		DG_Eigenvectors.o\
-		Fluids.o\
-		Funcoes_globais.o\
-		Hexahedral.o\
-		Linear.o\
-		Particao.o\
-		Quadrilateral.o\
-		Stdel.o\
-		Tetrahedral.o\
-		Transfere_rst.o\
-		Triangle.o
+		Fluids.o
+
+OBJECTS =	$(OBJECTS_STDEL) $(OBJECTS_DG)
+
+
 ####### Implicit rules
 
 .SUFFIXES: .cpp .cxx .cc .C .c
@@ -152,15 +168,21 @@ OBJECTS =	AMPFunctionsA.o\
 
 all: $(DESTDIR)$(TARGET)
 
-
 ####### Linking
 
 $(DESTDIR)$(TARGET): main.o $(OBJECTS) 
 	$(CLINKER)    -o $(TARGET) main.o $(MY_RPATH) $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
 
 
+dg	: main.o $(OBJECTS_DG) $(TARGET_LIB)
+	$(CLINKER)   main.o $(MY_RPATH) $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES) $(LSPECTRAL) -o $@ 
+
+mylib : $(OBJECTS_STDEL)
+	$(CLINKER)   $(OBJECTS_STDEL) $(LIB_FLAGS) $(LINK_FLAGS) $(MY_RPATH) $(LIBRARY_DIRS) $(LIBRARIES)  -o $(TARGET_LIB)
+
 ## A linha abaixo usa install_name_tool para adicionar o rpath ao executavel main	
 #install_name_tool -add_rpath $(MY_RPATH) main
+
 
 interpolar: ValoresInterpolados.o $(OBJECTS)
 	    $(CLINKER)    -o interpolar ValoresInterpolados.o $(MY_RPATH) $(OBJECTS) $(LINK_FLAGS) $(LIBRARY_DIRS) $(LIBRARIES)
@@ -181,6 +203,8 @@ $(OBJECTS_IP): $(HEADERS) $(TEMPLATED)
 
 $(OBJECTS_CF): $(HEADERS) $(TEMPLATED)
 
+$(OBJS_STDEL): $(HEADERS) $(TEMPLATED)
+
 main.o: main.cpp $(HEADERS) $(TEMPLATED)
 	$(CXX) -c $(CXX_FLAGS) $(INCLUDE_DIRS) -o $@  main.cpp
 
@@ -189,3 +213,5 @@ ValoresInterpolados.o: ValoresInterpolados.cc $(HEADERS) $(TEMPLATED)
 
 teste_ordenar.o: teste_ordenar.cc
 	$(CXX) -c $(CXX_FLAGS) $(INCLUDE_DIRS) -o $@  teste_ordenar.cc
+
+

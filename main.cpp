@@ -1,6 +1,7 @@
 // ********************************************************
 //---------------------------------------------------------
 #include "spectral.h"
+#include "DG_Prob.h"
 
 //# include "Problem_Interface.HXX"
 //# include "My_Nox_Problem.HXX"

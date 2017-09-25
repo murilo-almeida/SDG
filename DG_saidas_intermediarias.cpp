@@ -7,6 +7,7 @@
 //
 
 #include "spectral.h"
+#include "DG_Prob.h"
 
 // ****************************************
 // Imprimir as taxas de producao          *

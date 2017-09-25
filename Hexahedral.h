@@ -1,6 +1,7 @@
 #ifndef _Hexahedral_headers
 #define _Hexahedral_headers
 
+#include "PhElem.hpp"
 // ****************************************************************************
 class Hexahedral : public Stdel
 // ****************************************************************************

@@ -8,6 +8,7 @@
 #include "Teuchos_LAPACK.hpp"
 #include "Teuchos_CommandLineProcessor.hpp"
 #include "spectral.h"
+#include "DG_Prob.h"
 #ifdef HAVE_MPI
 #include "Epetra_MpiComm.h"
 #else

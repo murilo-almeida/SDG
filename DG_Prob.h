@@ -5,11 +5,10 @@
 // Encapsula os dados para resolucao do problema algebrico generico
 // ****************************************************************************
 
-enum var_nomes {sat,pres} ; // Esta ordem influencia na leitura dos parametros
-
 #include "PhElem.hpp"
 #include "GeProb.hpp"
 #include "DG_Elem.hpp"
+#include "Fluids.h"
 
 // ************************************************************
 // Esta linha eh importante: MyElem eh usado em varios lugares

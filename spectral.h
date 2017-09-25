@@ -238,6 +238,7 @@ struct FACE  /*! FACE = Borda do elemento tridimensional*/
  * \param flux_n = flux of non-wetting fluid through the border
  */
 
+# include "Funcoes_c.h"
 # include "Tstruct.h"
 # include "Particao.h"
 # include "Stdel.h"
@@ -246,7 +247,6 @@ struct FACE  /*! FACE = Borda do elemento tridimensional*/
 # include "Quadrilateral.h"
 # include "Tetrahedral.h"
 # include "Hexahedral.h"
-# include "Fluids.h"
-# include "Funcoes_c.h"
-# include "DG_Prob.h"
+//# include "Fluids.h"
+//# include "DG_Prob.h"
 #endif

@@ -1,4 +1,5 @@
 # include "spectral.h"
+# include "DG_Prob.h"
 // #include "PhElem.cpp"
 /******************************************************************************/
 /*   Transfere dados do arquivo para restart                                 */
